@@ -1,0 +1,107 @@
+:root{
+  --brand: #FF4400;
+  --brand-dark: #e64000;
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --text: #1f2328;
+  --muted: #6b7280;
+  --radius: 18px;
+  --shadow: 0 8px 24px rgba(0,0,0,.08);
+  --border: 1px solid #e7e9ef;
+}
+
+html, body, #root { height: 100%; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; }
+
+
+.login-page{
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 40px 16px;
+  text-align: center;
+  gap: 14px;
+}
+
+.login-logo{
+  width: 110px;
+  height: auto;
+  margin-bottom:0px;
+  user-select: none;
+}
+
+.login-role{
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: .4px;
+  color: var(--muted);
+}
+
+.login-card{
+  margin: 0;
+  width: 100%;
+  max-width: 350px;
+  background: var(--card);
+  border: var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px;
+  text-align: left;
+}
+
+.login-title{
+  margin: 0 0 14px;
+  font-size: 1.25rem;
+}
+
+.input-group{
+  display: grid;
+  grid-template-columns: 28px 1fr;
+  align-items: center;
+  gap: 8px;
+  border-top: var(--border);
+  padding: 12px 2px;
+}
+
+.input-group:first-of-type{ border-top: none; }
+
+.input-icon{
+  display: inline-grid;
+  place-items: center;
+  font-size: 18px;
+  color: var(--muted);
+  width: 28px;
+}
+
+.input-group input{
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.98rem;
+  padding: 8px 2px;
+  color: var(--text);
+}
+
+.input-group input::placeholder{ color: #a3a7b0; }
+
+.login-btn{
+  margin-top: 18px;
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  background: var(--brand);
+  color: white;
+  cursor: pointer;
+  transition: transform .04s ease, background .15s ease;
+}
+
+.login-btn:hover{ background: var(--brand-dark); }
+.login-btn:active{ transform: translateY(1px); }
+
+@media (max-width: 420px){
+  .login-card{ padding: 18px; }
+  .login-title{ font-size: 1.15rem; }
+}

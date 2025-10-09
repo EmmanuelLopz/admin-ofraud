@@ -1,18 +1,20 @@
 "use client";
 import React from 'react';
-import '../styles.css';
-import logo from './LogoOfraud.png';
+import Image from 'next/image';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 
-const handleSubmit = (e) => {
+const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
 };
 
 export default function Login() {
   return (
     <main className="login-page">
-      <img src={logo} alt="O-Fraud Logo" className="login-logo" />
-
+      <Image src="/LogoOfraud.png" alt="Logo O-Fraud"
+        width={110}
+        height={110}
+        className="login-logo"
+        priority/>
       <h3 className="login-role">Administrador</h3>
 
       <form className="login-card" onSubmit={handleSubmit}>

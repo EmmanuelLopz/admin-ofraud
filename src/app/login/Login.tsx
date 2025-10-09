@@ -1,6 +1,7 @@
 "use client";
 import React from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 
 const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -8,6 +9,12 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 };
 
 export default function Login() {
+  const router = useRouter();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    router.push("/dashboard");
+  };
+  
   return (
     <main className="login-page">
       <Image src="/LogoOfraud.png" alt="Logo O-Fraud"

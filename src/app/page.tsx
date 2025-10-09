@@ -1,9 +1,9 @@
 import Image from "next/image";
-import Login from "./Login";
-import Sidebar from "../components/Sidebar";
+import Login from "./login/Login";
+import "./globals.css";
 
 export default function Home() {
   return (
-    <Sidebar/>
+    <Login/>
   );
 }

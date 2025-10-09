@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { LayoutDashboard, Users, FileText, CheckCircle } from "lucide-react";
+import { LayoutGrid, Users, FileText, CheckCircle } from "lucide-react";
 
 export default function Sidebar() {
   return (
@@ -18,36 +18,40 @@ export default function Sidebar() {
           <h1 className="text-white text-xl tracking-wide" style={{ color: "#fff" }}>O-Fraud</h1>
         </div>
 
-        {/* Menú de navegación */}
-      <nav className="flex-1 p-6 space-y-2 overflow-y-auto">
+      {/* Menú de navegación (sin funcionalidad) */}
+      <nav className="flex-1 px-6 pb-6 space-y-3 overflow-y-auto">
+        {/* Dashboard (inactivo) */}
         <a
           href="#"
-          className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-gray-300 hover:text-white hover:bg-white/10"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-[#c7c9d1] hover:text-white hover:bg-white/10 transition-all duration-200"
         >
-          <LayoutDashboard size={20} />
+          <LayoutGrid size={20} />
           <span className="text-sm">Dashboard</span>
         </a>
 
+        {/* Usuarios (activo — naranja) */}
         <a
           href="#"
-          className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-white shadow-md"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-white shadow-md transition-all duration-200"
           style={{ backgroundColor: "#FF4400" }}
         >
           <Users size={20} />
           <span className="text-sm">Usuarios</span>
         </a>
 
+        {/* Reportes (inactivo) */}
         <a
           href="#"
-          className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-gray-300 hover:text-white hover:bg-white/10"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-[#c7c9d1] hover:text-white hover:bg-white/10 transition-all duration-200"
         >
           <FileText size={20} />
           <span className="text-sm">Reportes</span>
         </a>
 
+        {/* Aceptación de Reportes (inactivo) */}
         <a
           href="#"
-          className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-gray-300 hover:text-white hover:bg-white/10"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-[#c7c9d1] hover:text-white hover:bg-white/10 transition-all duration-200"
         >
           <CheckCircle size={20} />
           <span className="text-sm">Aceptación de Reportes</span>

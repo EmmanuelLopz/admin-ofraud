@@ -2,13 +2,13 @@
 import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FaEnvelope, FaLock } from 'react-icons/fa';
+import { FaEnvelope, FaLock, FaUser } from 'react-icons/fa';
 
 const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
 };
 
-export default function Login() {
+export default function Register() {
   const router = useRouter();
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -25,7 +25,12 @@ export default function Login() {
       <h3 className="login-role">Administrador</h3>
 
       <form className="login-card" onSubmit={handleSubmit}>
-        <h2 className="login-title">¡Bienvenido a O-Fraud!</h2>
+        <h2 className="login-title">Registro</h2>
+
+        <div className="input-group">
+          <span className="input-icon"><FaUser /></span>
+          <input type="text" placeholder="Nombre Completo" name="name" />
+        </div>
 
         <div className="input-group">
           <span className="input-icon"><FaEnvelope /></span>
@@ -37,18 +42,23 @@ export default function Login() {
           <input type="password" placeholder="Contraseña" name="password" autoComplete="current-password" />
         </div>
 
-        <button className="orange-btn" type="submit">Iniciar Sesión</button>
+        <div className="input-group">
+          <span className="input-icon"><FaLock /></span>
+          <input type="password" placeholder="Confirmar contraseña" name="confirmPassword" autoComplete="new-password" />
+        </div>
+
+        <button className="orange-btn" type="submit">Crear Cuenta</button>
 
         <div className="text-center pt-4">
               <p className="text-gray-600">
-                ¿No tienes cuenta?{" "}
+                ¿Ya tienes cuenta?{" "}
                 <button
                   type="button"
                   className="hover:underline"
                   style={{ color: '#FF4400' }}
-                  onClick={() => router.push("/register")}
+                  onClick={() => router.push("/login")}
                 >
-                  Crear cuenta
+                  Iniciar sesión
                 </button>
               </p>
             </div>

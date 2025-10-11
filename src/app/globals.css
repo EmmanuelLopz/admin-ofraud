@@ -1,11 +1,10 @@
-/* --- Tailwind base imports --- */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+
 :root {
-  /* Paleta y estilos base */
-  --brand: #FF4400;
+  --main-color: #FF4400;
   --brand-dark: #e64000;
   --bg: #f6f7fb;
   --card: #ffffff;
@@ -15,18 +14,18 @@
   --shadow: 0 8px 24px rgba(0,0,0,.08);
   --border: 1px solid #e7e9ef;
 
-  /* Variables heredadas del tema */
   --background: #ffffff;
   --foreground: #171717;
 }
 
-/* Modo oscuro opcional */
+/* Modo oscuro opcional por media query (si lo necesitas) */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
 }
+
 
 /* --- Base global --- */
 html, body, #root {
@@ -40,104 +39,47 @@ body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
-/* --- Login Page Styles (de styles.css) --- */
-.login-page {
-  min-height: 100%;
-  display: grid;
-  place-items: center;
-  padding: 40px 16px;
-  text-align: center;
-  gap: 14px;
-}
 
-.login-logo {
-  width: 110px;
-  height: auto;
-  margin-bottom: 0;
-  user-select: none;
-}
+@layer components {
+  /* Botón naranja (ya existía) */
+  .login-page {
+    @apply min-h-full grid place-items-center py-10 px-4 text-center gap-[14px];
+  }
+  .login-logo {
+    @apply w-[110px] h-auto select-none;
+  }
+  .login-role {
+    @apply m-0 font-semibold tracking-[0.4px] text-[var(--muted)];
+  }
+  .login-card {
+    @apply m-0 w-full max-w-[350px] bg-[var(--card)] rounded-[var(--radius)] p-[22px] text-left;
+    border:var(--border);
+    box-shadow:var(--shadow);
+  }
+  .login-title {
+    @apply m-0 mb-[14px] text-[1.25rem];
+  }
+  .input-group {
+    @apply grid grid-cols-[28px_1fr] items-center gap-2 py-3 px-[2px];
 
-.login-role {
-  margin: 0;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-  color: var(--muted);
-}
-
-.login-card {
-  margin: 0;
-  width: 100%;
-  max-width: 350px;
-  background: var(--card);
-  border: var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 22px;
-  text-align: left;
-}
-
-.login-title {
-  margin: 0 0 14px;
-  font-size: 1.25rem;
-}
-
-.input-group {
-  display: grid;
-  grid-template-columns: 28px 1fr;
-  align-items: center;
-  gap: 8px;
-  border-top: var(--border);
-  padding: 12px 2px;
-}
-
-.input-group:first-of-type {
-  border-top: none;
-}
-
-.input-icon {
-  display: inline-grid;
-  place-items: center;
-  font-size: 18px;
-  color: var(--muted);
-  width: 28px;
-}
-
-.input-group input {
-  border: none;
-  outline: none;
-  background: transparent;
-  font-size: 0.98rem;
-  padding: 8px 2px;
-  color: var(--text);
-}
-
-.input-group input::placeholder {
-  color: #a3a7b0;
-}
-
-.login-btn {
-  margin-top: 18px;
-  width: 100%;
-  border: none;
-  border-radius: 999px;
-  padding: 12px 16px;
-  font-size: 1rem;
-  font-weight: 600;
-  background: var(--brand);
-  color: white;
-  cursor: pointer;
-  transition: transform 0.04s ease, background 0.15s ease;
-}
-
-.login-btn:hover {
-  background: var(--brand-dark);
-}
-
-.login-btn:active {
-  transform: translateY(1px);
-}
-
-@media (max-width: 420px) {
-  .login-card { padding: 18px; }
-  .login-title { font-size: 1.15rem; }
+  }
+  .input-icon {
+    @apply inline-grid place-items-center text-[18px] w-[28px] text-[var(--muted)];
+  }
+  .input-group input {
+    @apply border-0 outline-none bg-transparent text-[0.98rem] py-2 px-[2px] text-[var(--text)];
+  }
+  .input-group input::placeholder {
+    color: #a3a7b0; /* o @apply text-[#a3a7b0] si lo aplicas en el input */
+  }
+  
+  .orange-btn {
+    @apply mt-[18px] w-full border-0 rounded-full py-3 px-4 text-base font-semibold
+      text-white cursor-pointer transition-all duration-150 active:translate-y-px;
+    background: var(--main-color);
+  }
+  .orange-btn:hover {
+    background: var(--brand-dark);
+    transform: scale(1.02);
+  }
 }

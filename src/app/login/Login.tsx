@@ -37,7 +37,7 @@ export default function Login() {
           <input type="password" placeholder="Contraseña" name="password" autoComplete="current-password" />
         </div>
 
-        <button className="login-btn" type="submit">Iniciar Sesión</button>
+        <button className="orange-btn" type="submit">Iniciar Sesión</button>
       </form>
     </main>
   );

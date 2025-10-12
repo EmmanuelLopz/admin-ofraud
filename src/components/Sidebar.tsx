@@ -19,7 +19,7 @@ export default function Sidebar() {
     <aside className="fixed left-0 top-0 h-screen w-[300px] bg-[#060025] shadow-lg z-10 flex flex-col">
       <div className="p-6 pb-4">
         <div className="flex items-center justify-center gap-8 py-6 mt-[15px] mb-[50px]">
-          <div className="bg-[#FF4400] p-2 rounded-lg w-[100px]">
+          <div className="bg-[#FFFFFF] p-2 w-[100px]">
             <Image
               src="/LogoOfraud.png"
               alt="Logo O-Fraud"

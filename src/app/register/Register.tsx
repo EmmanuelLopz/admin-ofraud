@@ -3,6 +3,26 @@ import React from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FaEnvelope, FaLock, FaUser } from 'react-icons/fa';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import {CreateUserDTO} from "../../types/CreateUserDTO";
+
+let RegisterSchema = Yup.object().shape({
+  name: Yup.string()
+    .max(50, "Máximo 50 caracteres")
+    .required("El nombre es obligatorio"),
+  email: Yup.string()
+    .email("Correo inválido")
+    .max(100, "Máximo 100 caracteres")
+    .required("El correo es obligatorio"),
+  password: Yup.string()
+    .min(6, "Mínimo 6 caracteres")
+    .max(60, "Máximo 60 caracteres")
+    .required("La contraseña es obligatoria"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password")], "Las contraseñas no coinciden")
+    .required("Confirma tu contraseña"),
+});
 
 const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
@@ -24,45 +44,140 @@ export default function Register() {
         priority/>
       <h3 className="login-role">Administrador</h3>
 
-      <form className="login-card" onSubmit={handleSubmit}>
-        <h2 className="login-title">Registro</h2>
+      <Formik
+        initialValues={{
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+        }}
+        validationSchema={RegisterSchema}
+        onSubmit={async (values, { setSubmitting }) => {
+            // aquí iría tu llamada al backend (POST /users, etc.)
+            // await createUser(values)
+            setSubmitting(false);
+            router.push("/dashboard");
+          }}
+          validateOnChange
+          validateOnBlur
+      >
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          isSubmitting,
+        }) => (
+          <form className="login-card" onSubmit={handleSubmit}>
+            <h2 className="login-title">Registro</h2>
 
-        <div className="input-group">
-          <span className="input-icon"><FaUser /></span>
-          <input type="text" placeholder="Nombre Completo" name="name" />
-        </div>
+            {/* Nombre */}
+            <div className="input-group">
+              <span className="input-icon">
+                <FaUser />
+              </span>
+              <input
+                type="text"
+                name="name"
+                placeholder="Nombre Completo"
+                maxLength={50}
+                value={values.name}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </div>
+            {touched.name && errors.name && (
+              <p className="text-red-500 text-xs mt-1">{errors.name}</p>
+            )}
 
-        <div className="input-group">
-          <span className="input-icon"><FaEnvelope /></span>
-          <input type="email" placeholder="Correo" name="email" autoComplete="email" />
-        </div>
+            {/* Correo */}
+            <div className="input-group">
+              <span className="input-icon">
+                <FaEnvelope />
+              </span>
+              <input
+                type="email"
+                name="email"
+                placeholder="Correo"
+                autoComplete="email"
+                maxLength={100}
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </div>
+            {touched.email && errors.email && (
+              <p className="text-red-500 text-xs mt-1">{errors.email}</p>
+            )}
 
-        <div className="input-group">
-          <span className="input-icon"><FaLock /></span>
-          <input type="password" placeholder="Contraseña" name="password" autoComplete="current-password" />
-        </div>
+            {/* Contraseña */}
+            <div className="input-group">
+              <span className="input-icon">
+                <FaLock />
+              </span>
+              <input
+                type="password"
+                name="password"
+                placeholder="Contraseña"
+                autoComplete="current-password"
+                maxLength={60}
+                value={values.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </div>
+            {touched.password && errors.password && (
+              <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+            )}
 
-        <div className="input-group">
-          <span className="input-icon"><FaLock /></span>
-          <input type="password" placeholder="Confirmar contraseña" name="confirmPassword" autoComplete="new-password" />
-        </div>
+            {/* Confirmar contraseña */}
+            <div className="input-group">
+              <span className="input-icon">
+                <FaLock />
+              </span>
+              <input
+                type="password"
+                name="confirmPassword"
+                placeholder="Confirmar contraseña"
+                autoComplete="new-password"
+                maxLength={60}
+                value={values.confirmPassword}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+            </div>
+            {touched.confirmPassword && errors.confirmPassword && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.confirmPassword}
+              </p>
+            )}
 
-        <button className="orange-btn" type="submit">Crear Cuenta</button>
+            <button
+              className="orange-btn"
+              type="submit"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Creando..." : "Crear Cuenta"}
+            </button>
 
-        <div className="text-center pt-4">
+            <div className="text-center pt-4">
               <p className="text-gray-600">
                 ¿Ya tienes cuenta?{" "}
                 <button
                   type="button"
                   className="hover:underline"
-                  style={{ color: '#FF4400' }}
+                  style={{ color: "#FF4400" }}
                   onClick={() => router.push("/login")}
                 >
                   Iniciar sesión
                 </button>
               </p>
             </div>
-      </form>
+          </form>
+        )}
+      </Formik>
     </main>
   );
 }

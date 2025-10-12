@@ -36,13 +36,14 @@ export default function Register() {
   };
   
   return (
-    <main className="login-page">
+    <main className="min-h-screen flex flex-col items-center px-4 pt-10 gap-4 text-center">
+      <h3 className="size-16 flex-none"></h3>
       <Image src="/LogoOfraud.png" alt="Logo O-Fraud"
         width={110}
         height={110}
         className="login-logo"
         priority/>
-      <h3 className="login-role">Administrador</h3>
+      <h3 className="size-16 flex-none"></h3>
 
       <Formik
         initialValues={{
@@ -71,7 +72,7 @@ export default function Register() {
           isSubmitting,
         }) => (
           <form className="login-card" onSubmit={handleSubmit}>
-            <h2 className="login-title">Registro</h2>
+            <h2 className="m-0 mb-4 text-xl font-semibold">Registrate!</h2>
 
             {/* Nombre */}
             <div className="input-group">

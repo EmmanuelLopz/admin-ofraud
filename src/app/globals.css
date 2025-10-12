@@ -42,9 +42,6 @@ body {
 
 @layer components {
   /* Botón naranja (ya existía) */
-  .login-page {
-    @apply min-h-full grid place-items-center py-10 px-4 text-center gap-[14px];
-  }
   .login-logo {
     @apply w-[110px] h-auto select-none;
   }
@@ -55,9 +52,6 @@ body {
     @apply m-0 w-full max-w-[400px] bg-[var(--card)] rounded-[var(--radius)] p-[22px] text-left;
     border:var(--border);
     box-shadow:var(--shadow);
-  }
-  .login-title {
-    @apply m-0 mb-[14px] text-[1.25rem];
   }
   .input-group {
     @apply grid grid-cols-[28px_1fr] items-center gap-2 py-3 px-[2px];

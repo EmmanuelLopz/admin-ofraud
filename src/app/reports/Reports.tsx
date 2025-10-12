@@ -4,7 +4,10 @@ export default function Reports() {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar a la izquierda */}
-      <Sidebar />
+      
+      <div className="w-1/6">
+          <Sidebar />
+      </div>
 
       {/* Contenido principal */}
       <main className="ml-[300px] flex-1 bg-[#f6f7fb] p-10">

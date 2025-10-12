@@ -16,21 +16,38 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-[300px] bg-[#060025] shadow-lg z-10 flex flex-col">
-      <div className="p-6 pb-4">
-        <div className="flex items-center justify-center gap-8 py-6 mt-[15px] mb-[50px]">
-          <div className="bg-[#FFFFFF] p-2 w-[100px]">
+    <aside className="fixed left-0 top-0 h-screen w-1/6 bg-[#060025] shadow-lg z-10 flex flex-col">
+      <div className="">
+
+        <div className="flex items-center gap-3 py-4 px-6">
+          <div className="h-10 w-auto relative aspect-square">
             <Image
               src="/LogoOfraud.png"
               alt="Logo O-Fraud"
-              width={100}
-              height={0}
-              style={{ height: "auto", width: "100%" }}
+              fill
+              className="object-contain"
               priority
             />
           </div>
-          <h1 className="text-white text-xl tracking-wide">O-Fraud</h1>
+          <h1 className="text-white text-lg font-medium">O-Fraud</h1>
         </div>
+
+        <div className="flex flex-col items-center mb-6">
+          <div className="h-20 w-auto relative rounded-full overflow-hidden aspect-square">
+            <Image
+              src="/adam.jpg"
+              alt="profile photo"
+              fill
+              className="object-fill"
+              priority
+            />
+          </div>
+
+          <div className="text-white text-lg font-semibold">Adam Sandler</div>
+          <div className="text-gray-500">Administrador</div>
+        </div>
+
+        <div className="border-t border-gray-700 my-4" />
 
         {/* Menú de navegación con Links reales */}
         <nav className="flex-1 px-6 pb-6 space-y-3 overflow-y-auto">

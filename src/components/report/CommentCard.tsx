@@ -11,10 +11,6 @@ type CommentCardProps = {
 
 function CommentCard({ comment, className, ...props }: CommentCardProps) {
   const combinedClasses = clsx(
-    'bg-white',
-    'rounded-lg',
-    'p-6',
-    'shadow-[0_0_15px_rgba(0,0,0,0.1)]',
     className
   );
 

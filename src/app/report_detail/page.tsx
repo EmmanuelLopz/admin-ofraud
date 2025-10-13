@@ -5,6 +5,7 @@ import { Reporte } from '../../types/types'; // Ajusta la ruta según tus tipos
 import reportes from "@/src/types/reportExamples";
 import MainLayout from '@/src/components/MainLayout';
 import Card from '@/src/components/Card';
+import ReportCard from '@/src/components/report/ReportCard';
 
 
 export default function ReporteDetalle() {
@@ -29,6 +30,8 @@ export default function ReporteDetalle() {
   return (
     <MainLayout>
       <div className="flex-1 flex p-10 items-start justify-center">
+        <ReportCard reporte={reporte} className="w-2/3 h-2/3" />
+        
         <Card 
           className="w-2/3 h-2/3"
         >

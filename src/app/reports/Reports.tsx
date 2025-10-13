@@ -3,9 +3,11 @@ import Sidebar from "@/src/components/Sidebar";
 import ReportCard from "@/src/components/report/ReportCard";
 import reportes from "@/src/types/reportExamples";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function Reports() {
   const router = useRouter();
+  const [hoveredIndex, setHoveredIndex] = useState<Number|null>(null);
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -29,11 +31,20 @@ export default function Reports() {
               <ReportCard 
                 key={i} 
                 reporte={reporte} 
+                onMouseEnter={() => setHoveredIndex(i)}
+                onMouseLeave={() => setHoveredIndex(null)}
                 onClick={() => {
                     localStorage.setItem("reporteActivo", i.toString());
                     router.push("/report_detail");
                 }} 
                 className="cursor-pointer hover:scale-105 transition-transform"
+                isHovered={hoveredIndex === i}
+                hoveredContent={
+                  <div className="text-center space-y-4">
+                    <div className="text-2xl font-bold">{reporte.title}</div>
+                    <div className="text-gray-600 italic">Resumen breve del reporte</div>
+                  </div>
+                }
               />
             ))}
           </div>

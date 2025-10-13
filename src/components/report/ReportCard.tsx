@@ -7,43 +7,51 @@ type ReportCardProps = {
   reporte: Reporte;
   className?: string;
   onClick?: () => void;
+  children?: React.ReactNode;
+  hoveredContent?: React.ReactNode;
+  isHovered?: boolean;
 } & React.ComponentProps<'div'>;
 
-function ReportCard({ reporte, className, onClick, ...props }: ReportCardProps) {
-  const [hovered, setHovered] = useState(false);
-
+function ReportCard({
+  reporte,
+  className,
+  onClick,
+  hoveredContent,
+  isHovered = false,
+  children,
+  ...props
+}: ReportCardProps) {
   return (
     <Card
-      className={clsx(
-        'basis-5/12 transition-transform duration-300',
-        className
-      )}
+      className={clsx("basis-5/12", className)}
       onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
       {...props}
     >
-      {/* Contenido alternativo al hacer hover */}
-      {hovered ? (
-        <div className="text-center space-y-4">
-          <div className="text-2xl font-bold">{reporte.title}</div>
-          <div className="text-gray-600 italic">Resumen del reporte</div>
-        </div>
+      {isHovered && hoveredContent ? (
+        hoveredContent
       ) : (
         <>
-          <div className="text-xl font-semibold text-center mb-4">{reporte.title}</div>
+          <div className="text-xl font-semibold text-center mb-4">
+            {reporte.title}
+          </div>
           <img
             src={reporte.photo_url}
             alt={reporte.title}
             className="w-full h-48 object-cover rounded-md mb-5 shadow-xl"
           />
-          <a href={reporte.url} className="text-blue-500 hover:underline mb-2 block">
+          <a
+            href={reporte.url}
+            className="text-blue-500 hover:underline mb-2 block"
+          >
             URL: {reporte.url}
           </a>
           <p className="text-gray-700 mb-10">{reporte.description}</p>
           <p className="text-sm text-gray-500">Categoría: {reporte.category}</p>
         </>
       )}
+
+      {/* Contenido adicional, sin importar si está hovered o no */}
+      {children}
     </Card>
   );
 }

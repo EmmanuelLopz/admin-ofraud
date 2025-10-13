@@ -30,7 +30,8 @@ export default function Reports() {
                 key={i} 
                 className="basis-5/12"
                 onClick={() => {
-                  router.push("/reporte_detalle");
+                  localStorage.setItem("reporteActivo", i.toString());
+                  router.push("/report_detail");
                 }}
               >
                 <div className="text-xl font-semibold text-center mb-4"> {reporte.title} </div>
@@ -43,7 +44,6 @@ export default function Reports() {
                     rounded-md 
                     mb-5 
                     shadow-xl
-                    
                   "
                 />
                 <a href={reporte.url} className="text-blue-500 hover:underline mb-2 block">

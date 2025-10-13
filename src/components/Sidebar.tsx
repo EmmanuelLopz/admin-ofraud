@@ -53,7 +53,10 @@ export default function Sidebar() {
         <nav className="flex-1 px-6 pb-6 space-y-3 overflow-y-auto">
           {NAV.map((item) => {
             const Icon = item.icon;
-            const active = pathname === item.href || pathname.startsWith(item.href + "/");
+            const isReportsSection = item.name === "Reportes" &&
+              (pathname.startsWith("/reports") || pathname === "/report_detail");
+            
+            const active = pathname === item.href || pathname.startsWith(item.href + "/") || isReportsSection;
             return (
               <Link
                 key={item.href}

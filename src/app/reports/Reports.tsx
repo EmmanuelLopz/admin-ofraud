@@ -10,7 +10,7 @@ export default function Reports() {
       </div>
 
       {/* Contenido principal */}
-      <main className="ml-[300px] flex-1 bg-[#f6f7fb] p-10">
+      <main className="flex-1 bg-[#f6f7fb] p-10">
         <h1 className="text-3xl font-semibold text-[#060025]">
           Incidencias
         </h1>

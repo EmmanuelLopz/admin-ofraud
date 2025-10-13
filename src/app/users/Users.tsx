@@ -167,9 +167,12 @@ export default function Users() {
   );
 
   return (
-    <div className="flex min-h-screen">
-      <Sidebar />
-      <main className="ml-[300px] flex-1 bg-[#f6f7fb] p-10">
+    <div className="flex flex-row min-h-screen">
+      <div className="w-1/6">
+        <Sidebar />
+      </div> 
+         
+      <main className="flex-1 bg-[#f6f7fb] p-10">
         <div>
           {/* Header con título y buscador */}
           <div className="mb-6">

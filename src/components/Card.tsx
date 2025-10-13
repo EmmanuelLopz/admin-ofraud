@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import type { ReactNode } from 'react';
 
 type CardProps = {
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
 
 } & React.ComponentProps<'div'>;

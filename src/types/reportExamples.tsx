@@ -11,14 +11,14 @@ const reportes: Reporte[] = [
       {
         user: {
           name: "Laura Gómez",
-          photo_url: "https://randomuser.me/api/portraits/women/1.jpg"
+          photo_url: "https://i.pinimg.com/originals/39/33/f6/3933f64de1724bb67264818810e3f2cb.jpg?nii=t"
         },
         content: "¡Ese bache lleva más de 3 semanas sin arreglarse!",
         replies: [
           {
             user: {
               name: "Carlos Pérez",
-              photo_url: "https://randomuser.me/api/portraits/men/2.jpg"
+              photo_url: "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg"
             },
             content: "Sí, ya reporté a la municipalidad pero no han respondido.",
             replies: []
@@ -37,7 +37,7 @@ const reportes: Reporte[] = [
       {
         user: {
           name: "Ana Torres",
-          photo_url: "https://randomuser.me/api/portraits/women/3.jpg"
+          photo_url: "https://www.shutterstock.com/image-photo/beauty-charisma-head-shot-portrait-600nw-2647728057.jpg"
         },
         content: "Esto está causando charcos y malos olores.",
         replies: []
@@ -54,14 +54,14 @@ const reportes: Reporte[] = [
       {
         user: {
           name: "Luis Martínez",
-          photo_url: "https://randomuser.me/api/portraits/men/4.jpg"
+          photo_url: "https://media.istockphoto.com/id/1682296067/photo/happy-studio-portrait-or-professional-man-real-estate-agent-or-asian-businessman-smile-for.jpg?s=612x612&w=0&k=20&c=9zbG2-9fl741fbTWw5fNgcEEe4ll-JegrGlQQ6m54rg="
         },
         content: "¡No se puede pasar! Ojalá lo retiren pronto.",
         replies: [
           {
             user: {
               name: "María López",
-              photo_url: "https://randomuser.me/api/portraits/women/5.jpg"
+              photo_url: "https://media.istockphoto.com/id/1969568166/photo/head-and-shoulders-portrait-of-confident-nyc-businesswoman.jpg?s=612x612&w=0&k=20&c=uPwXqlZKES_Ih3BtL7sJY2v40KrM7diYOONf1_jlfow="
             },
             content: "Los bomberos ya están en camino, según el noticiero local.",
             replies: []

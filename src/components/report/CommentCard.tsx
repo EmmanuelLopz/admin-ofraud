@@ -1,6 +1,7 @@
 // src/components/CommentCard.tsx
 import clsx from 'clsx';
 import { Commenta } from '@/src/types/types';
+import Card from '../Card';
 import type { ReactNode } from 'react';
 
 type CommentCardProps = {
@@ -15,9 +16,26 @@ function CommentCard({ comment, className, ...props }: CommentCardProps) {
   );
 
   return (
-    <div className={combinedClasses} {...props}>
-      {comment.user.name}
-    </div>
+    <Card>
+        <div className="flex flex-row gap-x-5 gap-y-0">
+            {/* profile photo */}
+            <img 
+                src={comment.user.photo_url} 
+                alt="Profile" 
+                className="w-16 h-16 rounded-full mb-4 object-cover"
+            />
+
+            <div className="flex flex-col justify-start items-start">
+                <div className="flex flex-row gap-3 justify-center items-center">
+                    <div className="text-lg font-semibold">{comment.user.name}</div>
+                    <div className="text-sm text-gray-500">2d</div>
+                </div>
+                
+                <div className="text-gray-600">{comment.content}</div>
+            </div>
+            
+        </div>
+    </Card>
   );
 }
 

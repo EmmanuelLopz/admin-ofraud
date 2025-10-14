@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 
 function Comment() {
     const [comment, setComment] = useState<Commenta | null>(null);
-    // const comment = reportes[0].comments[0]; // Ejemplo: tomar el primer comentario del primer reporte
+    const [refreshCounter, setRefreshCounter] = useState(0);
     const router = useRouter();
 
     useEffect(() => {
@@ -30,7 +30,7 @@ function Comment() {
             setComment(null);
         }
 
-    }, []);
+    }, [refreshCounter]);
 
 
     if (!comment) {
@@ -63,13 +63,14 @@ function Comment() {
                 <h2 className="text-lg font-normal text-gray-500 mb-2">{comment.replies.length > 0 ? 'Comentarios':''}</h2>
 
                 <div className="flex flex-col w-full gap-4">
-                    { comment.replies.map((comment, index) => (
+                    { comment.replies.map((commentSon, index) => (
                         <CommentCard 
                             key={index} 
-                            comment={comment} 
+                            comment={commentSon} 
                             onClick={()=>{
-                                localStorage.setItem("activeComment", JSON.stringify(comment));
-                                router.push("/comment")
+                                localStorage.setItem("activeComment", JSON.stringify(commentSon));
+                                setRefreshCounter(prev => prev + 1);
+                                router.push(`/comment?ts=${Date.now()}`); 
                             }}
                             className='cursor-pointer'
                         />

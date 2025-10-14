@@ -22,6 +22,7 @@ export default function Tools() {
                 <div className="p-10">
                     <h1 className="text-5xl font-semibold text-[#060025]">Herramientas</h1>
                 </div>
+                <img src="https://raw.githubusercontent.com/andrewtavis/sf-symbols-online/master/glyphs/0.circle.fill.png" alt="coming soon" className="w-1/2 h-1/2 m-auto object-contain" />
             </div>
         </div>
     );

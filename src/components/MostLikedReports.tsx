@@ -8,9 +8,11 @@ import {
   ArcElement,
   Tooltip,
   Legend,
+  ChartOptions,
+  Title,
 } from "chart.js";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 const reports = [
     { "id": 1, "title": "Estafa por mensajes SMS bancarios", "likes": 127 },
@@ -39,13 +41,35 @@ const data = {
             hoverOffset: 8
         }
         ]};
-    
 
+const options = {
+  responsive: false,
+  maintainAspectRatio: false,        // <- deja que el contenedor mande
+  plugins: {
+    legend: {
+        onClick: () => {},
+        position: "right",             // <- leyenda a la derecha
+        labels: {
+        color: "#060025",
+        boxWidth: 12,
+        usePointStyle: true,
+        // formatter: (v) => v.text.length > 18 ? v.text.slice(0,17) + "…" : v.text, // opcional: truncar
+      },
+    },
+    title: {
+      display: true,
+      text: "Top 10 reportes con más likes",
+      color: "#060025",
+      font: { size: 20, weight: "bold" },
+    },
+  },
+  layout: { padding: 8 },
+  cutout: "60%",
+} satisfies ChartOptions<"doughnut">;
+    
 export default function MostLikedReports() {
-    
-
     return(
-        <Doughnut data={data}/>
+        <Doughnut data={data} options={options} width={600} height={400}/>
     )
 
 }

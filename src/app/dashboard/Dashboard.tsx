@@ -22,8 +22,10 @@ export default function Dashboard() {
           <DataCard title="50000" info="Likes" color="#28a745" icon="Likes" />
           <DataCard title="10000" info="Comentarios" color="#dc3545" icon="Comentarios" />
         </div>
-        <h1 className="text-3xl font-semibold text-[#060025] mb-5">Top 10 reportes con más likes</h1>
-        <MostLikedReports/>
+        <div>
+          <MostLikedReports/>
+          <Card/>
+        </div>
       </main>
     </div>
   );

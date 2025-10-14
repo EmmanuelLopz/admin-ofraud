@@ -37,7 +37,11 @@ export default function Reports() {
                     localStorage.setItem("reporteActivo", i.toString());
                     router.push("/report_detail");
                 }} 
-                className="cursor-pointer hover:scale-105 transition-transform"
+                className="
+                  cursor-pointer 
+                  hover:scale-105 
+                  transition-transform
+                "
                 isHovered={hoveredIndex === i}
                 hoveredContent={
                   <div className="text-center space-y-4">

@@ -2,12 +2,63 @@ import type { Reporte } from './types'; // Ajusta la ruta si es necesario
 
 const reportes: Reporte[] = [
   {
-    title: "Bache en la avenida principal",
+    title: "Bache en la avenida principales",
     url: "https://ciudadsegura.org/reportes/123",
     photo_url: "https://planjuarez.org/wp-content/uploads/2024/12/DSC_0044-2-scaled-1.webp",
     description: "Hay un gran bache frente al supermercado que ha causado varios accidentes menores.",
     category: "Infraestructura",
     comments: [
+      {
+        user: {
+          name: "Laura Gómez",
+          photo_url: "https://i.pinimg.com/originals/39/33/f6/3933f64de1724bb67264818810e3f2cb.jpg?nii=t"
+        },
+        content: "¡Ese bache lleva más de 3 semanas sin arreglarse!",
+        replies: [
+          {
+            user: {
+              name: "Carlos Pérez",
+              photo_url: "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg"
+            },
+            content: "Sí, ya reporté a la municipalidad pero no han respondido.",
+            replies: []
+          }
+        ]
+      }, 
+      {
+        user: {
+          name: "Laura Gómez",
+          photo_url: "https://i.pinimg.com/originals/39/33/f6/3933f64de1724bb67264818810e3f2cb.jpg?nii=t"
+        },
+        content: "¡Ese bache lleva más de 3 semanas sin arreglarse!",
+        replies: [
+          {
+            user: {
+              name: "Carlos Pérez",
+              photo_url: "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg"
+            },
+            content: "Sí, ya reporté a la municipalidad pero no han respondido.",
+            replies: []
+          }
+        ]
+      }, 
+      {
+        user: {
+          name: "Laura Gómez",
+          photo_url: "https://i.pinimg.com/originals/39/33/f6/3933f64de1724bb67264818810e3f2cb.jpg?nii=t"
+        },
+        content: "¡Ese bache lleva más de 3 semanas sin arreglarse!",
+        replies: [
+          {
+            user: {
+              name: "Carlos Pérez",
+              photo_url: "https://images.ctfassets.net/h6goo9gw1hh6/2sNZtFAWOdP1lmQ33VwRN3/24e953b920a9cd0ff2e1d587742a2472/1-intro-photo-final.jpg?w=1200&h=992&fl=progressive&q=70&fm=jpg"
+            },
+            content: "Sí, ya reporté a la municipalidad pero no han respondido.",
+            replies: []
+          }
+        ]
+      }, 
       {
         user: {
           name: "Laura Gómez",

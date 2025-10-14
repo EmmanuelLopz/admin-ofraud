@@ -16,13 +16,13 @@ function CommentCard({ comment, className, ...props }: CommentCardProps) {
   );
 
   return (
-    <Card>
+    <Card className='cursor-pointer' {...props}>
         <div className="flex flex-row gap-x-5 gap-y-0">
             {/* profile photo */}
             <img 
                 src={comment.user.photo_url} 
                 alt="Profile" 
-                className="w-16 h-16 rounded-full mb-4 object-cover"
+                className="w-16 h-16 rounded-full object-cover"
             />
 
             <div className="flex flex-col justify-start items-start">

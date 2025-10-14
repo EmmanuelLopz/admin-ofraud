@@ -12,7 +12,7 @@ function Card({ children, className, ...props }: CardProps) {
   const combinedClasses = clsx(
     'bg-white',
     'rounded-lg',
-    'p-6',
+    'p-5',
     'shadow-[0_0_15px_rgba(0,0,0,0.1)]',
     className
   );

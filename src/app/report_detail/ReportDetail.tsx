@@ -38,17 +38,21 @@ export default function ReporteDetalle() {
         </div>
 
         <div className="flex flex-col w-full justify-center items-center gap-10">
-            <ReportCard reporte={reporte} className="w-2/3 h-2/3" />
+            <ReportCard reporte={reporte} className="w-2/3 h-auto" />
 
             <div className="w-3/5 gap-5">
-                <h2 className="text-lg font-normal text-gray-500 mb-2">Comentarios</h2>
+                <h2 className="text-lg font-normal text-gray-500 mb-2">Comentario{reporte.comments.length > 1 ? 's':''}</h2>
 
                 <div className="flex flex-col w-full gap-4">
                     { reporte.comments.map((comment, index) => (
                         <CommentCard 
                             key={index} 
                             comment={comment} 
-                            onClick={()=>router.push("/comment")}
+                            onClick={()=>{
+                                console.log("Storing coment:", JSON.stringify(comment));
+                                localStorage.setItem("activeComment", JSON.stringify(comment));
+                                router.push("/comment")
+                            }}
                             className='cursor-pointer'
                         />
                     ))}

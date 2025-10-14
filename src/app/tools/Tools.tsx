@@ -22,6 +22,7 @@ export default function Tools() {
                 <div className="p-10">
                     <h1 className="text-5xl font-semibold text-[#060025]">Herramientas</h1>
                 </div>
+                <img src="/public/glyphs/0.circle.fill.png" alt="" />
             </div>
         </div>
     );

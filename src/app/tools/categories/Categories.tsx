@@ -2,15 +2,14 @@
 
 import Sidebar from "@/src/components/Sidebar";
 import { useRouter } from "next/navigation";
+import React from "react";
 
-
-export default function Tools() {
+export default function Categories() {
     const router = useRouter();
 
     return (
             <div className="flex h-screen overflow-hidden">
-                {/* Sidebar a la izquierda */}
-                
+                                
                 <div className="w-1/6">
                     <Sidebar />
                 </div>
@@ -27,30 +26,12 @@ export default function Tools() {
                             
                             {/* Tarjeta 1 */}
                             <div
-                                onClick={() => router.push('/tools/categories')}
+                                onClick={() => router.push('/tools/cateogories')}
                                 className="cursor-pointer p-6 rounded-lg shadow-md transition-transform duration-300 hover:transform scale-105 hover:bg-blue-100 bg-white"
                             >
                                 <h2 className="text-2xl font-semibold mb-4">Categorías</h2>
                                 <p className="text-gray-600">Descripción general de las categorias y añadir nuevas.</p>
                             </div>
-
-                            {/* Tarjeta 2 */}
-                            <div
-                                // onClick={() => router.push('/tools/sentiment-analysis')}
-                                className="cursor-pointer p-6 rounded-lg shadow-md transition-transform duration-300 hover:transform scale-105 hover:bg-green-100 bg-white"
-                            >
-                                <h2 className="text-2xl font-semibold mb-4">Análisis de Impacto</h2>
-                                <p className="text-gray-600">Analiza el impacto que han tenido los reportes.</p>
-                            </div>
-
-                            {/* Tarjeta 3 */}
-                            <div
-                                // onClick={() => router.push('/tools/trend-analysis')}
-                                className="cursor-pointer p-6 rounded-lg shadow-md transition-transform duration-300 hover:transform scale-105 hover:bg-red-100 bg-white"
-                            >
-                                <h2 className="text-2xl font-semibold mb-4">Análisis de Tendencias</h2>
-                                <p className="text-gray-600">Identifica tendencias en los reportes a lo largo del tiempo.</p>
-                            </div>                           
                         </div>
                     </div>
                 </div>

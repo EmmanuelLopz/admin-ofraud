@@ -10,13 +10,13 @@ type CommentCardProps = {
 
 } & React.ComponentProps<'div'>;
 
-function CommentCard({ comment, className, ...props }: CommentCardProps) {
+function CommentCard({ comment, className, onClick, ...props }: CommentCardProps) {
   const combinedClasses = clsx(
     className
   );
 
   return (
-    <Card className='cursor-pointer' {...props}>
+    <Card className={combinedClasses} onClick={onClick}>
         <div className="flex flex-row gap-x-5 gap-y-0">
             {/* profile photo */}
             <img 

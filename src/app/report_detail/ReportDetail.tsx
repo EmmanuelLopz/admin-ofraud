@@ -20,10 +20,12 @@ export default function ReporteDetalle() {
 
   if (!reporte) {
     return (
-      <div className="p-10">
-        <h1 className="text-2xl font-bold">No se encontró el reporte</h1>
-        <p>Intenta volver a la página anterior.</p>
-      </div>
+        <MainLayout>
+            <div className="p-10">
+                <h1 className="text-2xl font-bold">No se encontró el reporte</h1>
+                <p>Intenta volver a la página anterior.</p>
+            </div>
+        </MainLayout>
     );
   }
 
@@ -47,13 +49,12 @@ export default function ReporteDetalle() {
                             key={index} 
                             comment={comment} 
                             onClick={()=>router.push("/comment")}
+                            className='cursor-pointer'
                         />
                     ))}
                 </div>
             </div>
-        </div>
-        
-        
+        </div>        
       </div>
     </MainLayout>
   );

@@ -54,9 +54,10 @@ export default function Sidebar() {
           {NAV.map((item) => {
             const Icon = item.icon;
             const isReportsSection = item.name === "Reportes" &&
-              (pathname.startsWith("/reports") || pathname === "/report_detail");
+              (pathname.startsWith("/reports") || pathname === "/report_detail" || pathname.startsWith("/comment"));
             
             const active = pathname === item.href || pathname.startsWith(item.href + "/") || isReportsSection;
+            
             return (
               <Link
                 key={item.href}

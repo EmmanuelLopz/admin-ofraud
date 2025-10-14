@@ -22,7 +22,6 @@ export default function Tools() {
                 <div className="p-10">
                     <h1 className="text-5xl font-semibold text-[#060025]">Herramientas</h1>
                 </div>
-                {/* <img src="/symbols/0.circle.fill.svg" alt="coming soon" className="w-1/6 h-auto" /> */}
             </div>
         </div>
     );

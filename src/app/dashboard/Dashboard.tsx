@@ -1,8 +1,13 @@
 import Card from "@/src/components/Card";
 import DataCard from "@/src/components/DataCard";
 import Sidebar from "../../components/Sidebar";
+import MostLikedReports from "@/src/components/MostLikedReports";
 
 export default function Dashboard() {
+  const likes = [
+  
+  ];
+  
   return (
     <div className="flex min-h-screen">
       <div className="w-1/6">
@@ -17,6 +22,8 @@ export default function Dashboard() {
           <DataCard title="50000" info="Likes" color="#28a745" icon="Likes" />
           <DataCard title="10000" info="Comentarios" color="#dc3545" icon="Comentarios" />
         </div>
+        <h1 className="text-3xl font-semibold text-[#060025] mb-5">Top 10 reportes con más likes</h1>
+        <MostLikedReports/>
       </main>
     </div>
   );

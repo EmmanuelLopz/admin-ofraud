@@ -9,7 +9,7 @@ const NAV = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutGrid },
   { name: "Usuarios",  href: "/users",     icon: UsersIcon },
   { name: "Reportes",  href: "/reports",  icon: FileText },
-  { name: "Aceptación de Reportes", href: "/validation", icon: CheckCircle },
+  { name: "Revisión de Reportes", href: "/validation", icon: CheckCircle },
 ];
 
 export default function Sidebar() {

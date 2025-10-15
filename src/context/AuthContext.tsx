@@ -101,13 +101,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 accessToken: response.data.accessToken,
                 refreshToken: response.data.refreshToken,
             };
-            setTokens(tokens);
 
             // Fetch user profile 
             const profileRes = await axios.get("http://localhost:3001/auth/profile", {
                 headers: { Authorization: `Bearer ${response.data.accessToken}` },
             });
 
+            // aqui se puede revisar si el user es admin - pero es de lado del front
+
+            setTokens(tokens);
             setUser(profileRes.data);
 
         } else {

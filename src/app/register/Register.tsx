@@ -24,16 +24,10 @@ let RegisterSchema = Yup.object().shape({
     .required("Confirma tu contraseña"),
 });
 
-const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-};
 
 export default function Register() {
   const router = useRouter();
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    router.push("/dashboard");
-  };
+
   
   return (
     <main className="min-h-screen flex flex-col items-center px-4 pt-10 gap-4 text-center">
@@ -53,25 +47,56 @@ export default function Register() {
           confirmPassword: "",
         }}
         validationSchema={RegisterSchema}
-        onSubmit={async (values, { setSubmitting }) => {
-            // aquí iría tu llamada al backend (POST /users, etc.)
-            // await createUser(values)
-            setSubmitting(false);
-            router.push("/dashboard");
-          }}
-          validateOnChange
-          validateOnBlur
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          isSubmitting,
-        }) => (
-          <form className="login-card" onSubmit={handleSubmit}>
+        onSubmit={async (values, { setSubmitting, setStatus, setFieldError, resetForm }) => {
+        setStatus(undefined);
+        try {
+          // Solo envía lo que el backend espera
+          const payload = {
+            name: values.name,
+            email: values.email,
+            password: values.password,
+          };
+
+          const res = await fetch("http://localhost:4000/users", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+            },
+            body: JSON.stringify(payload),
+          });
+
+          if (res.status === 201 || res.ok) {
+            resetForm();
+            router.replace("/login");
+            return;
+          }
+
+          let backendMsg = "Error creando el usuario.";
+          try {
+            const err = await res.json();
+            backendMsg =
+              err?.message ||
+              err?.error ||
+              (Array.isArray(err?.message) ? err.message.join(", ") : backendMsg);
+
+            if (String(backendMsg).toLowerCase().includes("email")) {
+              setFieldError("email", backendMsg);
+            } else {
+              setStatus(backendMsg);
+            }
+          } catch {
+            setStatus(backendMsg);
+          }
+        } catch (e) {
+          setStatus("No se pudo conectar con el servidor. ¿Back en 4000 y CORS activo?");
+        } finally {
+          setSubmitting(false);
+        }
+      }}
+    >
+        {({ isSubmitting, status, values, handleChange, handleBlur, errors, touched, handleSubmit: formikHandleSubmit }) => (
+          <form className="login-card" onSubmit={formikHandleSubmit}>
             <h2 className="m-0 mb-4 text-xl font-semibold">Registrate!</h2>
 
             {/* Nombre */}
@@ -80,6 +105,7 @@ export default function Register() {
                 <FaUser />
               </span>
               <input
+                id="name"
                 type="text"
                 name="name"
                 placeholder="Nombre Completo"
@@ -99,6 +125,7 @@ export default function Register() {
                 <FaEnvelope />
               </span>
               <input
+                id="email"
                 type="email"
                 name="email"
                 placeholder="Correo"
@@ -119,6 +146,7 @@ export default function Register() {
                 <FaLock />
               </span>
               <input
+                id="password"
                 type="password"
                 name="password"
                 placeholder="Contraseña"
@@ -142,7 +170,6 @@ export default function Register() {
                 type="password"
                 name="confirmPassword"
                 placeholder="Confirmar contraseña"
-                autoComplete="new-password"
                 maxLength={60}
                 value={values.confirmPassword}
                 onChange={handleChange}

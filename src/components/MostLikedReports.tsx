@@ -51,7 +51,7 @@ const options = {
         position: "right",             // <- leyenda a la derecha
         labels: {
         color: "#060025",
-        boxWidth: 12,
+        boxWidth: 10,
         usePointStyle: true,
         // formatter: (v) => v.text.length > 18 ? v.text.slice(0,17) + "…" : v.text, // opcional: truncar
       },

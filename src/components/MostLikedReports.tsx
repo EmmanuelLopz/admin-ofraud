@@ -43,7 +43,7 @@ const data = {
         ]};
 
 const options = {
-  responsive: false,
+  responsive: true,
   maintainAspectRatio: false,        // <- deja que el contenedor mande
   plugins: {
     legend: {

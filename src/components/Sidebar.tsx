@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { LayoutGrid, Users as UsersIcon, FileText, CheckCircle } from "lucide-react";
+import { LayoutGrid, Users as UsersIcon, FileText, CheckCircle, ToolCase } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 const NAV = [
@@ -10,6 +10,7 @@ const NAV = [
   { name: "Usuarios",  href: "/users",     icon: UsersIcon },
   { name: "Reportes",  href: "/reports",  icon: FileText },
   { name: "Revisión de Reportes", href: "/validation", icon: CheckCircle },
+  { name: "Herramientas", href: "/tools", icon: ToolCase },
 ];
 
 export default function Sidebar() {

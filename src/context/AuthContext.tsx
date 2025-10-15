@@ -16,6 +16,13 @@ type Tokens = {
     refreshToken: string;
 };
 
+type User = {
+    id: number;
+    name: string;
+    email: string;
+    admin: boolean;
+}
+
 type AuthContextType = {
     accessToken: string | null;
     refreshToken: string | null;
@@ -25,6 +32,8 @@ type AuthContextType = {
     setTokens: (tokens: Tokens) => void;
     tryRefreshToken: () => Promise<boolean>;
     loadingTokens?: boolean;
+    user: User | null;         
+    setUser?: (user: User) => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -33,6 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [refreshToken, setRefreshToken] = useState<string | null>(null);
     const [loadingTokens, setLoadingTokens] = useState(true);
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
       setLoadingTokens(true);
@@ -45,6 +55,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if(storedAccesToken && storedRefeshToken){
         setAccessToken(storedAccesToken);
         setRefreshToken(storedRefeshToken);
+
+        // Fetch profile when restoring session
+        axios.get("http://localhost:3001/auth/profile", {
+            headers: { Authorization: `Bearer ${storedAccesToken}` },
+        })
+        .then(res => setUser(res.data))
+        .catch(err => console.error("Error fetching profile:", err));
       }
       
       setLoadingTokens(false);
@@ -70,6 +87,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const logout = useCallback(() => {
         clearTokens();
+        setUser(null);
     }, [clearTokens]);
 
     const login = useCallback( async (email: string, password: string) => {
@@ -84,6 +102,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 refreshToken: response.data.refreshToken,
             };
             setTokens(tokens);
+
+            // Fetch user profile 
+            const profileRes = await axios.get("http://localhost:3001/auth/profile", {
+                headers: { Authorization: `Bearer ${response.data.accessToken}` },
+            });
+
+            setUser(profileRes.data);
 
         } else {
             throw new Error("Login Failed");
@@ -129,6 +154,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setTokens, 
             tryRefreshToken, 
             loadingTokens, 
+            user, 
+            setUser,
         }),
         [
             accessToken, 
@@ -138,6 +165,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setTokens, 
             tryRefreshToken, 
             loadingTokens,
+            user,
         ]
     );
 

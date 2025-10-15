@@ -16,7 +16,11 @@ const NAV = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
+
+  // if (!user){
+  //   return <div>Nada</div>
+  // }
 
   return (
     <aside className="h-full w-full bg-[#060025] shadow-lg flex flex-col">
@@ -45,7 +49,7 @@ export default function Sidebar() {
             />
           </div>
 
-          <div className="text-white text-lg font-semibold">Adam Sandler</div>
+          <div className="text-white text-lg font-semibold">{user ? user.name : "Adam Sandler"}</div>
           <div className="text-gray-500">Administrador</div>
         </div>
 

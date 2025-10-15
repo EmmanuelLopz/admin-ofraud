@@ -13,9 +13,9 @@ export default function ReporteDetalle() {
   const router = useRouter();
 
   useEffect(() => {
-    const data = localStorage.getItem('reporteActivo');
-    const reporteIndex = data ? parseInt(data, 10) : null;
-    setReporte(reportes[reporteIndex ?? 0]);
+    const params = new URLSearchParams(window.location.search);
+    const id = parseInt(params.get("id") || "0", 10);
+    setReporte(reportes[id]);
   }, []);
 
   if (!reporte) {

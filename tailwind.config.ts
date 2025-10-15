@@ -6,7 +6,11 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        brandOrange: '#FF4400',
+      },
+    },
   },
   plugins: [],
 } satisfies Config; 

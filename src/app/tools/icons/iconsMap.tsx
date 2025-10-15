@@ -20,3 +20,26 @@ export const lucideToSwiftMap: Record<string, string> = {
   'house': 'house',
   'shopping-bag': 'bag.circle',
 };
+
+export const swiftToLucideMap: Record<string, string> = {
+  'cart.badge.questionmark': 'shopping-cart',
+  'envelope.badge.shield.half.filled': 'mail-warning',
+  'app.badge.checkmark': 'square-check-big',
+  'banknote.fill': 'banknote',
+  'person.2.slash.fill': 'book-user',
+  'chart.line.downtrend.xyaxis': 'trending-down',
+  'airplane.path.dotted': 'plane',
+  'person.crop.circle.badge.exclamationmark': 'circle-user-round',
+  'checkmark.shield': 'shield-check',
+  'exclamationmark.icloud': 'cloud-alert',
+  'questionmark.text.page.fill': 'file-warning',
+  'clock': 'clock',
+  'calendar.badge.clock': 'calendar-clock',
+  'iphone': 'smartphone',
+  'heart.square': 'hospital',
+  'figure.run': 'bike',
+  'car': 'car',
+  'network.badge.shield.half.filled': 'shield-user',
+  'house': 'house',
+  'bag.circle': 'shopping-bag',
+};

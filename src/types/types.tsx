@@ -21,4 +21,11 @@ type Reporte = {
   comments: Commenta[];
 };
 
-export type { User, Commenta, Reporte };
+type Category = {
+  id: number;
+  name: string;
+  icon: string;
+  description: string;
+}
+
+export type { User, Commenta, Reporte, Category };

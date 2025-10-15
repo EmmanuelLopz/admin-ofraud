@@ -1,6 +1,7 @@
 'use client';
 
 import Sidebar from "@/src/components/Sidebar";
+import Card from "@/src/components/Card";
 import { useRouter } from "next/navigation";
 
 
@@ -26,31 +27,32 @@ export default function Tools() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
                             
                             {/* Tarjeta 1 */}
-                            <div
+                            <Card 
+                                className="hover:transform scale-105 hover:bg-blue-100 bg-white cursor-pointer" 
                                 onClick={() => router.push('/tools/categories')}
-                                className="cursor-pointer p-6 rounded-lg shadow-md transition-transform duration-300 hover:transform scale-105 hover:bg-blue-100 bg-white"
                             >
-                                <h2 className="text-2xl font-semibold mb-4">Categorías</h2>
+                                <h2 className="text-2xl font-semibold mb-4"> Categorías </h2>
                                 <p className="text-gray-600">Descripción general de las categorias y añadir nuevas.</p>
-                            </div>
+                            </Card>
 
                             {/* Tarjeta 2 */}
-                            <div
-                                // onClick={() => router.push('/tools/sentiment-analysis')}
-                                className="cursor-pointer p-6 rounded-lg shadow-md transition-transform duration-300 hover:transform scale-105 hover:bg-green-100 bg-white"
+                            <Card 
+                                className="hover:transform scale-105 hover:bg-green-100 bg-white cursor-pointer" 
+                                onClick={() => router.push('/tools/categories')}
                             >
                                 <h2 className="text-2xl font-semibold mb-4">Análisis de Impacto</h2>
                                 <p className="text-gray-600">Analiza el impacto que han tenido los reportes.</p>
-                            </div>
+                            </Card>
 
                             {/* Tarjeta 3 */}
-                            <div
-                                // onClick={() => router.push('/tools/trend-analysis')}
-                                className="cursor-pointer p-6 rounded-lg shadow-md transition-transform duration-300 hover:transform scale-105 hover:bg-red-100 bg-white"
+                            <Card 
+                                className="hover:transform scale-105 hover:bg-yellow-100 bg-white cursor-pointer" 
+                                onClick={() => router.push('/tools/categories')}
                             >
                                 <h2 className="text-2xl font-semibold mb-4">Análisis de Tendencias</h2>
                                 <p className="text-gray-600">Identifica tendencias en los reportes a lo largo del tiempo.</p>
-                            </div>                           
+                            </Card>          
+                                             
                         </div>
                     </div>
                 </div>

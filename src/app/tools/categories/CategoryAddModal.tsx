@@ -1,5 +1,9 @@
+'use client';
+
 import React, {useState} from "react";
+import { swiftToLucideMap } from "../icons/iconsMap";
 import { Category } from "@/src/types/types";
+import exampleCategories from "@/src/types/categoryExamples";
 
 type CategoryAddModalProps = {
   onClose: () => void;
@@ -10,19 +14,28 @@ export default function CategoryAddModal({ onClose }: CategoryAddModalProps){
     const [description, setDescription] = useState("");
     const [icon, setIcon] = useState("");
 
+    function toPascalCase(str: string) {
+        return str
+            .split('-')
+            .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+            .join('');
+    }
+
     const handleSave = () => {
         if (!name || !icon) {
             alert("El nombre y el ícono son obligatorios.");
             return;
         }
 
-        const newCategory = {
+        const newCategory: Category = {
+            id: Date.now(),
             name,
             description,
             icon,
         };
 
         console.log("Nueva categoría:", newCategory); // Aquí podrías hacer un POST o levantarlo al padre
+        exampleCategories.push(newCategory);
 
         onClose(); 
     };
@@ -52,13 +65,14 @@ export default function CategoryAddModal({ onClose }: CategoryAddModalProps){
                     value={icon}
                     onChange={(e) => setIcon(e.target.value)}
                 >
-                    
-                    <option value="" disabled>Selecciona un icono</option>
-                    <option value="folder">📁 Folder</option>
-                    <option value="book">📚 Book</option>
-                    <option value="camera">📷 Camera</option>
-                    <option value="star">⭐ Star</option>
-                    <option value="heart">❤️ Heart</option>
+
+                    {Object.entries(swiftToLucideMap).map(([swiftKey, lucideKey]) => {
+                        return (
+                        <option key={lucideKey} value={swiftKey}>
+                            {swiftKey}
+                        </option>
+                        );
+                    })}
                 </select>
 
                 <button 

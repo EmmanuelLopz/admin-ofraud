@@ -1,5 +1,6 @@
 "use client";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '@/src/context/AuthContext';
 import Image from 'next/image';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -13,10 +14,31 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 };
 
 export default function Login() {
+  const [loading, setLoading] = useState(false);
+  const { login, isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    console.log(isAuthenticated)
+    
+    if(isAuthenticated) {
+      router.push("/dashboard");
+    }
+  
+  }, [isAuthenticated])
+  
   const router = useRouter();
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push("/dashboard");
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+    
+    try {
+      await login(email, password); // attempt login
+    } catch (error) {
+      console.error(error);
+      alert("Correo o contraseña incorrectos"); // show feedback
+    }
   };
   
   return (

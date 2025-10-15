@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
 import { Edit, Eye, Trash2, X } from "lucide-react"; // <- X para cerrar
 import Modal from "../../components/ViewUserModal";
+import ProtectedRoute from "@/src/wrappers/ProtectedRoute";
 
 export default function Users() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -167,6 +168,7 @@ export default function Users() {
   );
 
   return (
+    <ProtectedRoute>
     <div className="flex flex-row min-h-screen">
       <div className="w-1/6">
         <Sidebar />
@@ -290,6 +292,7 @@ export default function Users() {
         </Modal>
       )}
     </div>
+    </ProtectedRoute>
   );
 }
 

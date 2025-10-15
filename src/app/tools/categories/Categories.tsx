@@ -9,6 +9,7 @@ import exampleCategories from "@/src/types/categoryExamples"
 import { Category } from '@/src/types/types';
 import CategoryModal from './CategoryModal';
 import CategoryAddModal from './CategoryAddModal';
+import ProtectedRoute from '@/src/wrappers/ProtectedRoute';
 
 export default function Categories() {
 
@@ -46,6 +47,7 @@ export default function Categories() {
 
 
     return (
+        <ProtectedRoute>
             <div className="flex h-screen ">
 
                 <div className="w-1/6">
@@ -105,5 +107,6 @@ export default function Categories() {
 
                 </div>
             </div>
+        </ProtectedRoute>
         );
 }

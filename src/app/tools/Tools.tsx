@@ -3,12 +3,14 @@
 import Sidebar from "@/src/components/Sidebar";
 import Card from "@/src/components/Card";
 import { useRouter } from "next/navigation";
+import ProtectedRoute from "@/src/wrappers/ProtectedRoute";
 
 
 export default function Tools() {
     const router = useRouter();
 
     return (
+        <ProtectedRoute>
             <div className="flex h-screen overflow-hidden">
                 {/* Sidebar a la izquierda */}
                 
@@ -57,5 +59,6 @@ export default function Tools() {
                     </div>
                 </div>
             </div>
-        );
+        </ProtectedRoute>
+    );
 }

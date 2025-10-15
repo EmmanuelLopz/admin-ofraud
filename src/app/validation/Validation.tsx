@@ -4,6 +4,7 @@ import Sidebar from "../../components/Sidebar";
 import ReportCard from "@/src/components/report/ReportCard";
 import reportes from "@/src/types/reportExamples";
 import { useState } from "react";
+import ProtectedRoute from "@/src/wrappers/ProtectedRoute";
 
 export default function Validation() {
   const [reports, setReports] = useState(reportes);
@@ -31,6 +32,7 @@ export default function Validation() {
   }
 
   return (
+    <ProtectedRoute>
     <div className="flex h-screen overflow-hidden">
       {/* Sidebar a la izquierda */}
       <div className="w-1/6">
@@ -105,5 +107,6 @@ export default function Validation() {
         </div>
       )}
     </div>
+    </ProtectedRoute>
   );
 }

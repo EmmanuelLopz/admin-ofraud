@@ -10,6 +10,9 @@ import { Category } from '@/src/types/types';
 import CategoryModal from './CategoryModal';
 import CategoryAddModal from './CategoryAddModal';
 import ProtectedRoute from '@/src/wrappers/ProtectedRoute';
+import { useAuth } from '@/src/context/AuthContext';
+import { AuthRunner } from '@/src/wrappers/authRunner';
+import axios from 'axios';
 
 export default function Categories() {
 
@@ -17,9 +20,32 @@ export default function Categories() {
     const [selectedCategory, setSelectedCategory] = useState<(Category & { hex: string; rgba: string, IconComponent: LucideIcon }) | null>(null);
     const [showAddModal, setShowAddModal] = useState(false);
 
+    const { accessToken, tryRefreshToken, logout } = useAuth();
+
+    const authRunner = new AuthRunner(
+        () => accessToken,
+        async() => {
+            const refreshed = await tryRefreshToken();
+            return refreshed ? accessToken : null;
+        },
+        logout
+    );
+
     useEffect(() => {
-    const newColors = exampleCategories.map(() => getRandomColor());
-    setColors(newColors);
+        const fetchCats = async () => {
+            const data = await authRunner.runWithAuth(async (token) => {
+                const res = await axios.get("http://localhost:3001/category", {
+                    headers: { Authorization: `Bearer ${token}` },
+                })
+                return res.data;
+            });
+
+            console.log("Fetched categories:", data);
+        }
+        
+        fetchCats();
+        const newColors = exampleCategories.map(() => getRandomColor());
+        setColors(newColors);
     }, []);
 
     function toPascalCase(str?: string): string {

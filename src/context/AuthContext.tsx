@@ -54,6 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const storedRefeshToken = localStorage.getItem("refreshToken");
 
         if(storedAccesToken && storedRefeshToken){
+            console.log("Refrescando el token de acceso con el token de refresco");
 
             axios.post("http://localhost:3001/auth/refresh", {
                 refreshToken: storedRefeshToken,
@@ -63,6 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 setAccessToken(res.data.accessToken);
                 setRefreshToken(res.data.refreshToken);
 
+                console.log("Sacando datos del usuario");
                 // Fetch profile when restoring session
                 axios.get("http://localhost:3001/auth/profile", {
                     headers: { Authorization: `Bearer ${res.data.accessToken}` },

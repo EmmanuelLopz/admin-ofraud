@@ -11,9 +11,7 @@ type Props = {
 export default function ProtectedRoute({children}: Props) {
     const {isAuthenticated, loadingTokens, accessToken, refreshToken, user } = useAuth();
     const router = useRouter();
-
-    console.log("ProtectedRoute - isAuthenticated:", isAuthenticated, "loadingTokens:", loadingTokens);
-
+    
     useEffect(() => {
       if(!loadingTokens && !isAuthenticated){
         router.push("/login");

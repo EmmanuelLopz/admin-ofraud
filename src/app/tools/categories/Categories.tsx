@@ -16,11 +16,11 @@ import axios from 'axios';
 
 export default function Categories() {
 
-    const [colors, setColors] = useState<{ hex: string; rgba: string }[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<(Category & { hex: string; rgba: string, IconComponent: LucideIcon }) | null>(null);
     const [showAddModal, setShowAddModal] = useState(false);
+    const [categories, setCategories] = useState<(Category & { hex: string; rgba: string, IconComponent: LucideIcon })[]>([]);
 
-    const { accessToken, tryRefreshToken, logout } = useAuth();
+    const { accessToken, tryRefreshToken, logout, loadingTokens } = useAuth();
 
     const authRunner = new AuthRunner(
         () => accessToken,
@@ -33,20 +33,35 @@ export default function Categories() {
 
     useEffect(() => {
         const fetchCats = async () => {
+            if(loadingTokens) return;
+
             const data = await authRunner.runWithAuth(async (token) => {
                 const res = await axios.get("http://localhost:3001/category", {
                     headers: { Authorization: `Bearer ${token}` },
                 })
                 return res.data;
             });
+            
+            if (!data) {
+                console.error("Failed to fetch categories due to authentication issues.");
+                return;
+            }
 
-            console.log("Fetched categories:", data);
+            const newCategories = data.map((cat: Category, i: number) => {
+                const lucideIconName = swiftToLucideMap[cat.icon];
+                const iconKey = toPascalCase(lucideIconName);
+                const IconComponent = (Icons as any)[iconKey] as LucideIcon || Icons.HelpCircle;
+
+                const { hex, rgba } = getRandomColor();
+
+                return { ...cat, hex, rgba, IconComponent };
+            });
+
+            setCategories(newCategories);
         }
-        
+
         fetchCats();
-        const newColors = exampleCategories.map(() => getRandomColor());
-        setColors(newColors);
-    }, []);
+    }, [loadingTokens, accessToken]);
 
     function toPascalCase(str?: string): string {
         if (!str) return '';
@@ -91,26 +106,19 @@ export default function Categories() {
                     <div className="flex-1 px-10 pb-10">
                         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-10 ">
 
-                            
-                                { exampleCategories.map((category, i) => {
-                                    const lucideIconName = swiftToLucideMap[category.icon];
-                                    const iconKey = toPascalCase(lucideIconName);
-                                    const IconComponent = (Icons as any)[iconKey] as LucideIcon || Icons.HelpCircle;
-
-                                    const { hex, rgba } = colors[i] || { hex: '#000', rgba: 'rgba(0,0,0,0.5)' };
-
+                                { categories.map((category, i) => {
                                     return (
                                         <div 
                                             className="rounded-xl bg-white p-5 flex justify-center items-center cursor-pointer" 
                                             key={category.id}
                                             style={{ 
-                                                boxShadow: `0 4px 10px ${rgba}`
+                                                boxShadow: `0 4px 10px ${category.rgba}`
                                             }}
-                                            onClick={() => setSelectedCategory({ ...category, hex, rgba, IconComponent })}
+                                            onClick={() => setSelectedCategory(category)}
                                         >
                                             <div className="flex flex-row items-center space-x-5">
-                                                <div className="text-center" style={{ color: hex }}>{category.name}</div>
-                                                <IconComponent className="w-6 h-6" style={{ color: hex }} />
+                                                <div className="text-center" style={{ color: category.hex }}>{category.name}</div>
+                                                <category.IconComponent className="w-6 h-6" style={{ color: category.hex }} />
                                             </div>
                                         </div>
                                     );

@@ -26,6 +26,7 @@ type Category = {
   name: string;
   icon: string;
   description: string;
+  deletedAt: string | null;
 }
 
 export type { User, Commenta, Reporte, Category };

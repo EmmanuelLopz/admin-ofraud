@@ -45,26 +45,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
-      setLoadingTokens(true);
+        console.log("Restoring session from localStorage");
 
-      if(typeof window === "undefined") return;
+        setLoadingTokens(true);  
+        if(typeof window === "undefined") return;
 
-      const storedAccesToken = localStorage.getItem("accessToken");
-      const storedRefeshToken = localStorage.getItem("refreshToken");
+        const storedAccesToken = localStorage.getItem("accessToken");
+        const storedRefeshToken = localStorage.getItem("refreshToken");
 
-      if(storedAccesToken && storedRefeshToken){
-        setAccessToken(storedAccesToken);
-        setRefreshToken(storedRefeshToken);
+        if(storedAccesToken && storedRefeshToken){
 
-        // Fetch profile when restoring session
-        axios.get("http://localhost:3001/auth/profile", {
-            headers: { Authorization: `Bearer ${storedAccesToken}` },
-        })
-        .then(res => setUser(res.data))
-        .catch(err => console.error("Error fetching profile:", err));
-      }
-      
-      setLoadingTokens(false);
+            axios.post("http://localhost:3001/auth/refresh", {
+                refreshToken: storedRefeshToken,
+            })
+            .then(res => {
+                // si funciona y los guardo, ademas acceso a los 
+                setAccessToken(res.data.accessToken);
+                setRefreshToken(res.data.refreshToken);
+
+                // Fetch profile when restoring session
+                axios.get("http://localhost:3001/auth/profile", {
+                    headers: { Authorization: `Bearer ${res.data.accessToken}` },
+                })
+                .then(res => setUser(res.data))
+                .catch(err => console.error("Error fetching profile:", err));
+
+
+            })
+            .catch(err => {
+                // si no funciona los borro 
+                clearTokens();
+                console.error("Error validating access token:", err);
+                console.error(user ? user.name : "Unknown user", "session expired");
+            })
+            .finally(() => {
+                console.log("Finished restoring session");
+                setLoadingTokens(false);
+            });
+        }
 
     }, [])
 

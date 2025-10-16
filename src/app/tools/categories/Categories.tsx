@@ -31,6 +31,8 @@ export default function Categories() {
         logout
     );
 
+    const [refreshCounter, setRefreshCounter] = useState(0);
+
     useEffect(() => {
         const fetchCats = async () => {
             if(loadingTokens) return;
@@ -61,7 +63,7 @@ export default function Categories() {
         }
 
         fetchCats();
-    }, [loadingTokens, accessToken]);
+    }, [loadingTokens, accessToken, refreshCounter]);
 
     function toPascalCase(str?: string): string {
         if (!str) return '';
@@ -137,7 +139,7 @@ export default function Categories() {
                         <CategoryModal category={selectedCategory} onClose={()=>setSelectedCategory(null)}/>
                     }
 
-                    {showAddModal && <CategoryAddModal onClose={()=>setShowAddModal(false)} />}
+                    {showAddModal && <CategoryAddModal onClose={()=>setShowAddModal(false)} setRefreshCounter={setRefreshCounter} />}
 
                 </div>
             </div>

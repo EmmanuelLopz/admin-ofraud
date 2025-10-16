@@ -4,15 +4,29 @@ import React, {useState} from "react";
 import { swiftToLucideMap } from "../icons/iconsMap";
 import { Category } from "@/src/types/types";
 import exampleCategories from "@/src/types/categoryExamples";
+import { useAuth } from '@/src/context/AuthContext';
+import { AuthRunner } from '@/src/wrappers/authRunner';
+import axios from 'axios';
 
 type CategoryAddModalProps = {
   onClose: () => void;
+  setRefreshCounter: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export default function CategoryAddModal({ onClose }: CategoryAddModalProps){
+export default function CategoryAddModal({ onClose, setRefreshCounter }: CategoryAddModalProps){
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [icon, setIcon] = useState("");
+    const { accessToken, tryRefreshToken, logout, loadingTokens } = useAuth();
+
+    const authRunner = new AuthRunner(
+        () => accessToken,
+        async () => {
+            const refreshed = await tryRefreshToken();
+            return refreshed ? accessToken : null;
+        },
+        logout
+    );
 
     function toPascalCase(str: string) {
         return str
@@ -21,21 +35,34 @@ export default function CategoryAddModal({ onClose }: CategoryAddModalProps){
             .join('');
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (!name || !icon) {
             alert("El nombre y el ícono son obligatorios.");
             return;
         }
 
-        const newCategory: Category = {
-            id: Date.now(),
+        const newCategory = {
             name,
             description,
-            icon,
+            icon
         };
 
+        const data = await authRunner.runWithAuth(async (token) => {
+            const res = await axios.post('http://localhost:3001/category', newCategory, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            return res.data;
+        });
+
+        if (!data) {
+            alert("No se pudo registrar la categoría.");
+            return;
+        }
+
         console.log("Nueva categoría:", newCategory); // Aquí podrías hacer un POST o levantarlo al padre
-        exampleCategories.push(newCategory);
+        // refrescar con un contador lo de atras
+
+        setRefreshCounter(prev => prev + 1);
 
         onClose(); 
     };

@@ -35,18 +35,18 @@ function ReportCard({
             {reporte.title}
           </div>
           <img
-            src={reporte.photo_url}
+            src={reporte.report_pic_url}
             alt={reporte.title}
             className="w-full h-48 object-cover rounded-md mb-5 shadow-xl"
           />
           <a
-            href={reporte.url}
+            href={reporte.reference_url}
             className="text-blue-500 hover:underline mb-2 block"
           >
-            URL: {reporte.url}
+            URL: {reporte.reference_url}
           </a>
           <p className="text-gray-700 mb-10">{reporte.description}</p>
-          <p className="text-sm text-gray-500">Categoría: {reporte.category}</p>
+          <p className="text-sm text-gray-500">Categoría: {reporte.category ? reporte.category.name : 'undf'}</p>
         </>
       )}
 

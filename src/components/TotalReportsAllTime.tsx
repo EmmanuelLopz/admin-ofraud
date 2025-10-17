@@ -12,6 +12,11 @@ import {
   ChartOptions,
 } from "chart.js";
 
+import { useEffect } from "react";
+import { useAuth } from '@/src/context/AuthContext';
+import { AuthRunner } from '@/src/wrappers/authRunner';
+import axios from 'axios';
+
 ChartJS.register(
   LineElement,
   PointElement,
@@ -70,6 +75,39 @@ const options = {
 } satisfies ChartOptions<"line">;
 
 export default function TotalReportsAllTime() {
+    const { accessToken, tryRefreshToken, logout, loadingTokens } = useAuth();
+
+    const authRunner = new AuthRunner(
+        () => accessToken,
+        async() => {
+            const refreshed = await tryRefreshToken();
+            return refreshed ? accessToken : null;
+        },
+        logout
+    );
+
+    useEffect(() => {
+        const fetchGraphData = async () => {
+            if(loadingTokens) return;
+
+            const date_req = "2024-10-05";
+
+            const data = await authRunner.runWithAuth(async (token) => {
+                const res = await axios.get(`http://localhost:3001/stats/user-registrations?since=${date_req}`, {
+                    headers: { Authorization: `Bearer ${token}` },
+                })
+                return res.data;
+            });
+
+            console.log(data);
+        }
+
+        fetchGraphData();
+
+        console.log("hola desde usuario grafica");
+
+    }, [])
+    
     return(
         <div className="flex justify-center items-center">
             <Line data={data} options={options} width={1000} height={400}/>

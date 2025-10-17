@@ -4,11 +4,79 @@ import ReportCard from "@/src/components/report/ReportCard";
 import reportes from "@/src/types/reportExamples";
 import ProtectedRoute from "@/src/wrappers/ProtectedRoute";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/src/context/AuthContext";
+import { AuthRunner } from '@/src/wrappers/authRunner';
+import axios from 'axios';
+import { Reporte } from "@/src/types/types";
 
 export default function Reports() {
   const router = useRouter();
   const [hoveredIndex, setHoveredIndex] = useState<Number|null>(null);
+  const [reports, setReports] = useState<Reporte[]> ([]);
+
+  const { accessToken, tryRefreshToken, logout, loadingTokens } = useAuth();
+  
+  const authRunner = new AuthRunner(
+      () => accessToken,
+      async() => {
+          const refreshed = await tryRefreshToken();
+          return refreshed ? accessToken : null;
+      },
+      logout
+  );
+
+  useEffect(() => {
+
+    const fetchReports = async () => { 
+      const data = await authRunner.runWithAuth(async (token) => {
+        if(loadingTokens) return;
+
+          const res = await axios.get("http://localhost:3001/reports", {
+              headers: { Authorization: `Bearer ${token}` },
+          })
+
+          return res.data;
+      });
+
+      if (!data) {
+          console.error("Failed to fetch reports due to authentication issues");
+          return;
+      }
+
+      const newReports = await Promise.all( data.map( async (repo: Reporte, i: number) => {
+
+        const categoryData = await authRunner.runWithAuth(async (token) => {
+          if (loadingTokens) return;
+
+          const res = await axios.get(
+            `http://localhost:3001/category/${repo.category_id}`,
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+
+          return res.data;
+        });
+
+        return { ...repo, category: categoryData };
+
+      }));
+
+      if (!newReports) {
+          console.error("Failed to fetch category of the report due to authentication issues");
+          return;
+      }
+
+      setReports(newReports);
+
+      console.log(newReports);
+    }
+
+    fetchReports();
+    
+  }, [loadingTokens])
+  
 
   return (
     <ProtectedRoute>
@@ -29,7 +97,7 @@ export default function Reports() {
           {/* Contenido con scroll */}
           <div className="flex-1 overflow-y-auto px-10 p-5">
             <div className="flex flex-wrap justify-center gap-x-24 gap-y-10">
-              {reportes.map((reporte, i) => (
+              {reports.map((reporte, i) => (
                 <ReportCard 
                   key={i} 
                   reporte={reporte} 

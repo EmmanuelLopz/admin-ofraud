@@ -13,12 +13,16 @@ type Commenta = {
 
 // Reporte
 type Reporte = {
+  id: number;
   title: string;
-  url: string;
-  photo_url: string;
   description: string;
-  category: string;
-  comments: Commenta[];
+  report_pic_url: string;
+  category_id: number;
+  user_id: number;
+  reference_url: string;
+  creation_date: string; // o Date si lo parseas al recibirlo
+  status_id: number;
+  category: Category | null;
 };
 
 type Category = {

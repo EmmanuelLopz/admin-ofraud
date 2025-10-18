@@ -12,7 +12,7 @@ import {
   ChartOptions,
 } from "chart.js";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from '@/src/context/AuthContext';
 import { AuthRunner } from '@/src/wrappers/authRunner';
 import axios from 'axios';
@@ -27,6 +27,11 @@ ChartJS.register(
   Legend
 );
 
+interface TotalUsers{
+    date: string;
+    total_users: number;
+}
+
 const dates = [
     { "date": "2024-10-05", "total_users": 1 },
     { "date": "2024-10-06", "total_users": 10 },
@@ -40,41 +45,11 @@ const dates = [
     { "date": "2024-10-14", "total_users": 5000 }
 ];
 
-const data = {
-  labels: dates.map(r => r.date),
-  datasets: [{
-    label: 'Usuarios',
-    data: dates.map(r => r.total_users),
-    fill: false,
-    borderColor: 'rgb(75, 192, 192)',
-    tension: 0.1
-  }]
-};
 
-const options = {
-    responsive: false,
-    maintainAspectRatio: false,
-    plugins: {
-        legend: {
-            onClick: () => {},
-            position: "top",
-            labels: {
-                color: "#060025",
-                boxWidth: 12,
-                usePointStyle: true,
-            },
-        },
-        title: {
-            display: true,
-            text: "Total de usuarios registrados a lo largo del tiempo",
-            color: "#060025",
-            font: { size: 20, weight: "bold" },
-        },
-    },
-    layout: { padding: 8 },
-} satisfies ChartOptions<"line">;
 
 export default function TotalReportsAllTime() {
+    const [chart, setChart] = useState<TotalUsers[]>([]);
+    const [error, setError] = useState<string | null>(null);
     const { accessToken, tryRefreshToken, logout, loadingTokens } = useAuth();
 
     const authRunner = new AuthRunner(
@@ -87,30 +62,73 @@ export default function TotalReportsAllTime() {
     );
 
     useEffect(() => {
+        if (loadingTokens) return;
+        
+        const date_req = "2025-10-05";
+
         const fetchGraphData = async () => {
-            if(loadingTokens) return;
-
-            const date_req = "2024-10-05";
-
+          try {
             const data = await authRunner.runWithAuth(async (token) => {
-                const res = await axios.get(`http://localhost:3001/stats/user-registrations?since=${date_req}`, {
-                    headers: { Authorization: `Bearer ${token}` },
-                })
-                return res.data;
+              const response = await axios.get(
+                `http://localhost:3001/stats/user-registrations?since=${date_req}`,
+                { headers: { Authorization: `Bearer ${token}` } }
+              );
+              return response.data;
             });
 
-            console.log(data);
-        }
+            console.log("Top users:", data);
+            setChart(data);
+          } catch (e: any) {
+            console.error(e);
+            setError(
+              e?.response?.data?.message ||
+                e?.message ||
+                "Failed to load top reports"
+            );
+          }
+        };
 
         fetchGraphData();
+      }, [loadingTokens, authRunner]);
 
-        console.log("hola desde usuario grafica");
+    const datos = {
+        labels: chart.map(r => r.date),
+        datasets: [{
+            label: 'Usuarios',
+            data: chart.map(r => r.total_users),
+            fill: false,
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+        }]
+    };
 
-    }, [])
+    const options = {
+        responsive: false,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                onClick: () => {},
+                position: "top",
+                labels: {
+                    color: "#060025",
+                    boxWidth: 12,
+                    usePointStyle: true,
+                },
+            },
+            title: {
+                display: true,
+                text: "Total de usuarios registrados a lo largo del tiempo",
+                color: "#060025",
+                font: { size: 20, weight: "bold" },
+            },
+        },
+        layout: { padding: 8 },
+    } satisfies ChartOptions<"line">;
+
     
     return(
         <div className="flex justify-center items-center">
-            <Line data={data} options={options} width={1000} height={400}/>
+            <Line data={datos} options={options} width={1000} height={400}/>
         </div>
         
     )

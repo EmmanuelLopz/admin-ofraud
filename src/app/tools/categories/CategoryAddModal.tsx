@@ -28,13 +28,6 @@ export default function CategoryAddModal({ onClose, setRefreshCounter }: Categor
         logout
     );
 
-    function toPascalCase(str: string) {
-        return str
-            .split('-')
-            .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-            .join('');
-    }
-
     const handleSave = async () => {
         if (!name || !icon) {
             alert("El nombre y el ícono son obligatorios.");

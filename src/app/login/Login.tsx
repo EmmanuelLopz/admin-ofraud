@@ -15,18 +15,18 @@ const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, loadingTokens } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
-    console.log(isAuthenticated)
+    console.log("isAuthenticated:", isAuthenticated, "loadingTokens:", loadingTokens);
     
-    if(isAuthenticated) {
+    if(!loadingTokens && isAuthenticated) {
+      console.log("Redirecting to dashboard...");
       router.push("/dashboard");
     }
   
-  }, [isAuthenticated])
-  
-  const router = useRouter();
+  }, [isAuthenticated, loadingTokens, router])
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -34,10 +34,14 @@ export default function Login() {
     const password = formData.get("password") as string;
     
     try {
+      setLoading(true);
       await login(email, password); // attempt login
+      // Redirect will be handled by useEffect
     } catch (error) {
       console.error(error);
       alert("Correo o contraseña incorrectos"); // show feedback
+    } finally {
+      setLoading(false);
     }
   };
   
@@ -64,7 +68,9 @@ export default function Login() {
           <input type="password" placeholder="Contraseña" name="password" autoComplete="current-password" />
         </div>
 
-        <button className="orange-btn" type="submit">Iniciar Sesión</button>
+        <button className="orange-btn" type="submit" disabled={loading || loadingTokens}>
+          {loading || loadingTokens ? "Cargando..." : "Iniciar Sesión"}
+        </button>
 
         <div className="text-center pt-4">
               <p className="text-gray-600">

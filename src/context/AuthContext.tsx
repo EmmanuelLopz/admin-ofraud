@@ -84,6 +84,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 console.log("Finished restoring session");
                 setLoadingTokens(false);
             });
+        } else {
+            // No stored tokens, stop loading
+            console.log("No stored tokens found");
+            setLoadingTokens(false);
         }
 
     }, [])
@@ -111,26 +115,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, [clearTokens]);
 
     const login = useCallback( async (email: string, password: string) => {
+        console.log("Attempting login for:", email);
         const response = await axios.post("http://localhost:3001/auth/login", {
             email, 
             password,
         });
 
+        console.log("Login response status:", response.status);
         if(response.status == 201) {
             const tokens: Tokens = {
                 accessToken: response.data.accessToken,
                 refreshToken: response.data.refreshToken,
             };
 
+            console.log("Tokens received, fetching user profile...");
             // Fetch user profile 
             const profileRes = await axios.get("http://localhost:3001/auth/profile", {
                 headers: { Authorization: `Bearer ${response.data.accessToken}` },
             });
 
+            console.log("Profile fetched:", profileRes.data);
             // aqui se puede revisar si el user es admin - pero es de lado del front
 
             setTokens(tokens);
             setUser(profileRes.data);
+            console.log("Login completed successfully");
 
         } else {
             throw new Error("Login Failed");

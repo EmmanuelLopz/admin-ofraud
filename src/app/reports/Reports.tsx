@@ -103,7 +103,7 @@ export default function Reports() {
                   reporte={reporte} 
                   onMouseEnter={() => setHoveredIndex(i)}
                   onMouseLeave={() => setHoveredIndex(null)}
-                  onClick={() => router.push(`/report_detail?id=${i}`)}
+                  onClick={() => router.push(`/report_detail?id=${reporte.id}`)}
                   className="
                     cursor-pointer 
                     hover:scale-105 

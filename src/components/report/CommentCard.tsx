@@ -20,7 +20,7 @@ function CommentCard({ comment, className, onClick, ...props }: CommentCardProps
         <div className="flex flex-row gap-x-5 gap-y-0">
             {/* profile photo */}
             <img 
-                src={comment.user.photo_url} 
+                src={comment.user.profile_pic_url} 
                 alt="Profile" 
                 className="w-16 h-16 rounded-full object-cover"
             />

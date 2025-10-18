@@ -4,13 +4,6 @@ type User = {
   photo_url: string;
 };
 
-// Comentario (puede tener respuestas)
-type Commenta = {
-  user: User;
-  content: string;
-  replies: Commenta[]; // Comentarios hijos
-};
-
 // Reporte
 type Reporte = {
   id: number;
@@ -31,6 +24,25 @@ type Category = {
   icon: string;
   description: string;
   deletedAt: string | null;
+}
+
+type UserR = {
+  email: string;
+  id: number;
+  name: string;
+  profile_pic_url: string;
+}
+
+type Commenta = {
+  id: number;
+  content: string;
+  user_id: number;
+  report_id: number;
+  parent_comment_id: number | null;
+  creation_date: string;
+  deleted_at: string | null; 
+  likes: number;
+  user: UserR
 }
 
 export type { User, Commenta, Reporte, Category };

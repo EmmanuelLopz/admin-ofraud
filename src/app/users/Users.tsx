@@ -1,15 +1,28 @@
 "use client";
 import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
-import { Edit, Eye, Trash2, X } from "lucide-react"; // <- X para cerrar
+import { Edit, Eye, Trash2, X, Plus } from "lucide-react"; // <- X para cerrar, Plus para crear
 import Modal from "../../components/ViewUserModal";
+import CreateUserModal from "../../components/CreateUserModal";
+import CustomButton from "@/src/components/CustomButton";
+import Toast from "../../components/Toast";
 import ProtectedRoute from "@/src/wrappers/ProtectedRoute";
+import { useAuth } from "@/src/context/AuthContext";
+import { AuthRunner } from "@/src/wrappers/authRunner";
+import axios from "axios";
 
 export default function Users() {
   const [searchTerm, setSearchTerm] = useState("");
+  const { accessToken, tryRefreshToken, logout, loadingTokens } = useAuth();
+  const [toast, setToast] = useState<{show: boolean, message: string, type: 'success' | 'error'}>({
+    show: false,
+    message: '',
+    type: 'success'
+  });
 
   // NEW: estado para modal y usuario seleccionado
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<null | {
     id: string;
     name: string;
@@ -22,17 +35,29 @@ export default function Users() {
     update_date: string;
   }>(null);
 
+  const authRunner = new AuthRunner(
+    () => accessToken,
+    async () => {
+      const refreshed = await tryRefreshToken();
+      return refreshed ? accessToken : null;
+    },
+    logout
+  );
+
   // Opcional: bloquear scroll del body cuando modal está abierto
   useEffect(() => {
-    if (isModalOpen) document.body.style.overflow = "hidden";
+    if (isModalOpen || isCreateModalOpen) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "";
     return () => { document.body.style.overflow = ""; };
-  }, [isModalOpen]);
+  }, [isModalOpen, isCreateModalOpen]);
 
   // Cerrar con ESC
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setIsModalOpen(false);
+      if (e.key === "Escape") {
+        setIsModalOpen(false);
+        setIsCreateModalOpen(false);
+      }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -42,9 +67,37 @@ export default function Users() {
     setSelectedUser(usuario);
     setIsModalOpen(true);
   };
+  
   const closeUserModal = () => {
     setIsModalOpen(false);
     setSelectedUser(null);
+  };
+
+  const openCreateModal = () => {
+    setIsCreateModalOpen(true);
+  };
+
+  const closeCreateModal = () => {
+    setIsCreateModalOpen(false);
+  };
+
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({
+      show: true,
+      message,
+      type
+    });
+  };
+
+  const hideToast = () => {
+    setToast(prev => ({ ...prev, show: false }));
+  };
+
+  const handleUserCreated = () => {
+    // Aquí podrías refrescar la lista de usuarios
+    console.log("Usuario creado exitosamente");
+    showToast("Usuario creado exitosamente", "success");
+    // TODO: Refrescar la lista de usuarios desde la API
   };
 
   const usuarios = [
@@ -176,9 +229,16 @@ export default function Users() {
          
       <main className="flex-1 bg-[#f6f7fb] p-10">
         <div>
-          {/* Header con título y buscador */}
+          {/* Header con título, buscador y botón crear */}
           <div className="mb-6">
-            <h2 className="mb-4">Usuarios</h2>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-3xl font-semibold text-[#060025]">Usuarios</h2>
+              <CustomButton
+                label="Crear Usuario"
+                onClick={openCreateModal}
+                className="bg-[#FF4400] hover:bg-[#e63d00]"
+              />
+            </div>
             <div className="relative max-w-md">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
                 <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
@@ -290,6 +350,24 @@ export default function Users() {
             <p><b>Comentarios:</b> </p>
           </div>
         </Modal>
+      )}
+
+      {/* CREATE USER MODAL */}
+      {isCreateModalOpen && (
+        <CreateUserModal
+          onClose={closeCreateModal}
+          onUserCreated={handleUserCreated}
+          authRunner={authRunner}
+        />
+      )}
+
+      {/* TOAST NOTIFICATION */}
+      {toast.show && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={hideToast}
+        />
       )}
     </div>
     </ProtectedRoute>

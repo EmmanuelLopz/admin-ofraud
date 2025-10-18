@@ -18,18 +18,6 @@ import axios from 'axios';
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
-const reports = [
-    { "id": 1, "title": "Estafa por mensajes SMS bancarios", "likes": 127 },
-    { "id": 2, "title": "Venta falsa de consolas por Instagram", "likes": 115 },
-    { "id": 3, "title": "Correo fraudulento de PayPal", "likes": 108 },
-    { "id": 4, "title": "Ofertas falsas de empleo en LinkedIn", "likes": 101 },
-    { "id": 5, "title": "Sorteo falso de Amazon Prime", "likes": 96 },
-    { "id": 6, "title": "Cuenta falsa de soporte técnico", "likes": 89 },
-    { "id": 7, "title": "Phishing por WhatsApp corporativo", "likes": 81 },
-    { "id": 8, "title": "Venta de boletos falsos en Facebook", "likes": 77 },
-    { "id": 9, "title": "Falsa rifa de automóviles", "likes": 73 },
-    { "id": 10, "title": "Correo de actualización de cuenta Netflix", "likes": 68 }
-  ];
     
 interface Report {
     id: number;
@@ -95,16 +83,15 @@ export default function MostLikedReports() {
 
       const options = {
         responsive: true,
-        maintainAspectRatio: false,        // <- deja que el contenedor mande
+        maintainAspectRatio: false,
         plugins: {
           legend: {
               onClick: () => {},
-              position: "right",             // <- leyenda a la derecha
+              position: "right",
               labels: {
               color: "#060025",
               boxWidth: 10,
               usePointStyle: true,
-              // formatter: (v) => v.text.length > 18 ? v.text.slice(0,17) + "…" : v.text, // opcional: truncar
             },
           },
           title: {

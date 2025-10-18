@@ -57,7 +57,7 @@ export default function Register() {
             password: values.password,
           };
 
-          const res = await fetch("http://localhost:4000/users", {
+          const res = await fetch("http://localhost:3001/users", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

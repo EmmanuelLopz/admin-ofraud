@@ -1,4 +1,4 @@
-import { X } from "lucide-react"; // <- X para cerrar
+import { X } from "lucide-react";
 export default function Modal({children, onClose,}: {children: React.ReactNode; onClose: () => void;}) {
 
   const onBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -13,7 +13,6 @@ export default function Modal({children, onClose,}: {children: React.ReactNode; 
       aria-modal="true"
     >
       <div className="relative w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
-        {/* Botón X */}
         <button
           onClick={onClose}
           className="absolute right-3 top-3 inline-flex h-8 w-8 items-center justify-center rounded-md bg-gray-100 hover:bg-gray-200 text-gray-700"

@@ -4,12 +4,14 @@ import Sidebar from "../../components/Sidebar";
 import { Edit, Eye, Trash2, X, Plus } from "lucide-react"; // <- X para cerrar, Plus para crear
 import Modal from "../../components/ViewUserModal";
 import CreateUserModal from "../../components/CreateUserModal";
+import ViewUser from "../../components/ViewUser";
 import CustomButton from "@/src/components/CustomButton";
 import Toast from "../../components/Toast";
 import ProtectedRoute from "@/src/wrappers/ProtectedRoute";
 import { useAuth } from "@/src/context/AuthContext";
 import { AuthRunner } from "@/src/wrappers/authRunner";
 import axios from "axios";
+import DeleteUserModal from "@/src/components/DeleteUserModal";
 
 export default function Users() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,6 +25,7 @@ export default function Users() {
   // NEW: estado para modal y usuario seleccionado
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<null | {
     id: string;
     name: string;
@@ -46,10 +49,11 @@ export default function Users() {
 
   // Opcional: bloquear scroll del body cuando modal está abierto
   useEffect(() => {
-    if (isModalOpen || isCreateModalOpen) document.body.style.overflow = "hidden";
+    if (isModalOpen || isCreateModalOpen || isDeleteModalOpen) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "";
     return () => { document.body.style.overflow = ""; };
-  }, [isModalOpen, isCreateModalOpen]);
+  }, [isModalOpen, isCreateModalOpen, isDeleteModalOpen]);
+
 
   // Cerrar con ESC
   useEffect(() => {
@@ -57,6 +61,7 @@ export default function Users() {
       if (e.key === "Escape") {
         setIsModalOpen(false);
         setIsCreateModalOpen(false);
+        setIsDeleteModalOpen(false);
       }
     }
     window.addEventListener("keydown", onKey);
@@ -81,6 +86,16 @@ export default function Users() {
     setIsCreateModalOpen(false);
   };
 
+  const openDeleteModal = (usuario: any) => {
+    setSelectedUser(usuario);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setSelectedUser(null);
+  };
+
   const showToast = (message: string, type: 'success' | 'error') => {
     setToast({
       show: true,
@@ -100,7 +115,16 @@ export default function Users() {
     // TODO: Refrescar la lista de usuarios desde la API
   };
 
-  const usuarios = [
+
+  const handleUserDeleted = () => {
+    // Aquí podrías refrescar la lista de usuarios
+    console.log("Usuario eliminado exitosamente");
+    showToast("Usuario eliminado exitosamente", "success");
+    // TODO: Refrescar la lista de usuarios desde la API
+  };
+  
+  // Original hardcoded array replaced with state
+  const [usuarios, setUsuarios] = useState([
     {
       id: "1",
       name: "Ana García",
@@ -211,7 +235,7 @@ export default function Users() {
       admin: true,
       update_date: "2025-09-25"
     }
-  ];
+  ]);
 
   const filteredUsuarios = usuarios.filter(
     (usuario) =>
@@ -297,6 +321,7 @@ export default function Users() {
                       <button
                         type="button"
                         className="bg-red-600 hover:bg-red-700 text-white border-0 rounded px-2 py-1 text-sm flex items-center"
+                        onClick={() => openDeleteModal(usuario)}
                       >
                         <Trash2 size={16} />
                       </button>
@@ -316,39 +341,7 @@ export default function Users() {
       {/* MODAL */}
       {isModalOpen && selectedUser && (
         <Modal onClose={closeUserModal}>
-          {/* Contenido del modal */}
-          <div>
-            <div className="flex justify-center mb-6">
-              <img
-              src={selectedUser.profile_pic_url}
-              alt={selectedUser.name}
-              className="w-40 h-40 rounded-full object-cover"
-              />
-            </div>
-            <h3 className="flex justify-center mb-4 text-xl font-semibold text-[#060025]">{selectedUser.name}</h3>
-            <div className="grid grid-cols-2 gap-2 mb-4">
-              {/*Columna 1*/}
-              <div>
-                <div className="space-y-2">
-                  <label className="text-sm text-gray-600 block mb-1">Correo:</label>
-                  <p className="text-sm text-gray-900">{selectedUser.email}</p>
-                  <label className="text-sm text-gray-600 block mb-1">Fecha de creación:</label>
-                  <p className="text-sm text-gray-900">{selectedUser.creation_date}</p>
-                </div>
-              </div>
-
-              <div>
-                <div className="space-y-2">
-                  <label className="text-sm text-gray-600 block mb-1">Rol:</label>
-                  <p className="text-sm text-gray-900">{selectedUser.admin ? 'Administrador' : 'Usuario'}</p>
-                  <label className="text-sm text-gray-600 block mb-1">Fecha de actualización:</label>
-                  <p className="text-sm text-gray-900">{selectedUser.update_date}</p>
-                </div>
-              </div>
-            </div>
-            <p><b>Likes:</b> </p>
-            <p><b>Comentarios:</b> </p>
-          </div>
+          <ViewUser user={selectedUser} />
         </Modal>
       )}
 
@@ -357,6 +350,19 @@ export default function Users() {
         <CreateUserModal
           onClose={closeCreateModal}
           onUserCreated={handleUserCreated}
+          authRunner={authRunner}
+        />
+      )}
+
+      {/* DELETE USER MODAL */}
+      {isDeleteModalOpen && selectedUser && (
+        <DeleteUserModal
+          user={selectedUser}
+          onClose={closeDeleteModal}
+          onUserDeleted={(id) => {
+            setUsuarios(prev => prev.filter(u => u.id !== id));
+            handleUserDeleted();
+          }}
           authRunner={authRunner}
         />
       )}

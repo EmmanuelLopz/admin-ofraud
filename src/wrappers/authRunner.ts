@@ -18,7 +18,7 @@ export class AuthRunner {
         } catch (error) {
             const status = (error as AxiosError).response?.status;
 
-            if(status === 401) {
+            if(status === 401 || status === 403) {
                 const newToken = await this.tryRefreshToken();
 
                 if(newToken) {

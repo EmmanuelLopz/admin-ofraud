@@ -1,3 +1,5 @@
+import { getProfileImageUrl } from '@/src/utils/imageUtils';
+
 interface ViewUserProps {
   user: {
     profile_pic_url: string;
@@ -10,13 +12,6 @@ interface ViewUserProps {
 }
 
 export default function ViewUser({ user }: ViewUserProps) {
-  const getProfileImage = (url: string) => {
-    // Return placeholder if no URL or if URL is empty/invalid
-    if (!url || url.trim() === '' || url === 'null' || url === 'undefined') {
-      return 'https://placehold.co/200';
-    }
-    return url;
-  };
 
   const formatDate = (dateString: string) => {
     if (!dateString || dateString.trim() === '' || dateString === 'null' || dateString === 'undefined') {
@@ -38,7 +33,7 @@ export default function ViewUser({ user }: ViewUserProps) {
     <div>
       <div className="flex justify-center mb-6">
         <img
-          src={getProfileImage(user.profile_pic_url)}
+          src={getProfileImageUrl(user.profile_pic_url)}
           alt={user.name}
           className="w-40 h-40 rounded-full object-cover"
           onError={(e) => {

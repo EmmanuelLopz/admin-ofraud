@@ -63,7 +63,7 @@ export default function DeleteUserModal({
     try {
       const response = await authRunner.runWithAuth(
         (token) =>
-          fetch(`http://localhost:3001/api/user/${user.id}`, {
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/users/${user.id}`, {
             method: 'DELETE',
             headers: {
               Authorization: `Bearer ${token}`,
@@ -148,6 +148,7 @@ export default function DeleteUserModal({
           </button>
           <button
             type="button"
+            onClick={handleConfirm}
             disabled={loading}
             className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors disabled:opacity-60"
           >

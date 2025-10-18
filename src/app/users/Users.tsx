@@ -4,6 +4,7 @@ import Sidebar from "../../components/Sidebar";
 import { Edit, Eye, Trash2, X, Plus } from "lucide-react"; // <- X para cerrar, Plus para crear
 import Modal from "../../components/ViewUserModal";
 import CreateUserModal from "../../components/CreateUserModal";
+import UpdateUserModal from "../../components/UpdateUserModal";
 import ViewUser from "../../components/ViewUser";
 import CustomButton from "@/src/components/CustomButton";
 import Toast from "../../components/Toast";
@@ -12,6 +13,7 @@ import { useAuth } from "@/src/context/AuthContext";
 import { AuthRunner } from "@/src/wrappers/authRunner";
 import axios from "axios";
 import DeleteUserModal from "@/src/components/DeleteUserModal";
+import { getProfileImageUrl } from "@/src/utils/imageUtils";
 
 type User = {
   id: string;
@@ -60,6 +62,7 @@ export default function Users() {
   // NEW: estado para modal y usuario seleccionado
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
@@ -101,7 +104,7 @@ export default function Users() {
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [currentPage, totalPages, isModalOpen, isCreateModalOpen, isDeleteModalOpen, loading]);
+  }, [currentPage, totalPages, isModalOpen, isCreateModalOpen, isUpdateModalOpen, isDeleteModalOpen, loading]);
 
   const openUserModal = (usuario: User) => {
     setSelectedUser(usuario);
@@ -119,6 +122,16 @@ export default function Users() {
 
   const closeCreateModal = () => {
     setIsCreateModalOpen(false);
+  };
+
+  const openUpdateModal = (usuario: User) => {
+    setSelectedUser(usuario);
+    setIsUpdateModalOpen(true);
+  };
+
+  const closeUpdateModal = () => {
+    setIsUpdateModalOpen(false);
+    setSelectedUser(null);
   };
 
   const openDeleteModal = (usuario: User) => {
@@ -149,6 +162,11 @@ export default function Users() {
     fetchUsers(currentPage); // Refresh the users list
   };
 
+  const handleUserUpdated = () => {
+    console.log("Usuario actualizado exitosamente");
+    showToast("Usuario actualizado exitosamente", "success");
+    fetchUsers(currentPage); // Refresh the users list
+  };
 
   const handleUserDeleted = () => {
     console.log("Usuario eliminado exitosamente");
@@ -251,13 +269,8 @@ export default function Users() {
     await fetchUsers(newPage);
   };
 
-  // Helper function to get profile image with placeholder
-  const getProfileImage = (url: string) => {
-    if (!url || url.trim() === '' || url === 'null' || url === 'undefined') {
-      return 'https://placehold.co/200';
-    }
-    return url;
-  };
+  // Helper function to get profile image with placeholder (using utility)
+  const getProfileImage = (url: string) => getProfileImageUrl(url);
 
   const filteredUsuarios = usuarios.filter(usuario =>
     searchTerm === '' ||
@@ -398,7 +411,9 @@ export default function Users() {
 
                       <button
                         type="button"
+                        onClick={() => openUpdateModal(usuario)}
                         className="bg-white hover:bg-gray-50 border-2 border-[#060025] text-[#060025] hover:text-[#060025] rounded px-2 py-1 text-sm flex items-center"
+                        aria-label={`Editar ${usuario.name}`}
                       >
                         <Edit size={16} />
                       </button>
@@ -502,9 +517,21 @@ export default function Users() {
 
       {/* CREATE USER MODAL */}
       {isCreateModalOpen && (
-        <CreateUserModal
-          onClose={closeCreateModal}
-          onUserCreated={handleUserCreated}
+        <Modal onClose={closeCreateModal}>
+          <CreateUserModal
+            onClose={closeCreateModal}
+            onUserCreated={handleUserCreated}
+            authRunner={authRunner}
+          />
+        </Modal>
+      )}
+
+      {/* UPDATE USER MODAL */}
+      {isUpdateModalOpen && selectedUser && (
+        <UpdateUserModal
+          user={selectedUser}
+          onClose={closeUpdateModal}
+          onUserUpdated={handleUserUpdated}
           authRunner={authRunner}
         />
       )}

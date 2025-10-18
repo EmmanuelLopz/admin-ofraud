@@ -13,6 +13,32 @@ import { AuthRunner } from "@/src/wrappers/authRunner";
 import axios from "axios";
 import DeleteUserModal from "@/src/components/DeleteUserModal";
 
+type User = {
+  id: string;
+  name: string;
+  email: string;
+  password?: string;
+  salt?: string;
+  creation_date: string;
+  profile_pic_url: string;
+  admin: boolean;
+  update_date: string;
+};
+
+type PaginatedResponse = {
+  users?: User[];
+  data?: User[];
+  pagination?: {
+    currentPage: number;
+    totalPages: number;
+    total: number;
+    limit: number;
+  };
+  totalPages?: number;
+  total?: number;
+  currentPage?: number;
+};
+
 export default function Users() {
   const [searchTerm, setSearchTerm] = useState("");
   const { accessToken, tryRefreshToken, logout, loadingTokens } = useAuth();
@@ -22,21 +48,20 @@ export default function Users() {
     type: 'success'
   });
 
+  // API state management
+  const [usuarios, setUsuarios] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const usersPerPage = 10;
+
   // NEW: estado para modal y usuario seleccionado
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<null | {
-    id: string;
-    name: string;
-    email: string;
-    password: string;
-    salt: string;
-    creation_date: string;
-    profile_pic_url: string;
-    admin: boolean;
-    update_date: string;
-  }>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const authRunner = new AuthRunner(
     () => accessToken,
@@ -63,12 +88,22 @@ export default function Users() {
         setIsCreateModalOpen(false);
         setIsDeleteModalOpen(false);
       }
+      // Keyboard navigation for pagination
+      if (!isModalOpen && !isCreateModalOpen && !isDeleteModalOpen && !loading) {
+        if (e.key === "ArrowLeft" && currentPage > 1) {
+          e.preventDefault();
+          handlePageChange(currentPage - 1);
+        } else if (e.key === "ArrowRight" && currentPage < totalPages) {
+          e.preventDefault();
+          handlePageChange(currentPage + 1);
+        }
+      }
     }
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, []);
+  }, [currentPage, totalPages, isModalOpen, isCreateModalOpen, isDeleteModalOpen, loading]);
 
-  const openUserModal = (usuario: any) => {
+  const openUserModal = (usuario: User) => {
     setSelectedUser(usuario);
     setIsModalOpen(true);
   };
@@ -86,7 +121,7 @@ export default function Users() {
     setIsCreateModalOpen(false);
   };
 
-  const openDeleteModal = (usuario: any) => {
+  const openDeleteModal = (usuario: User) => {
     setSelectedUser(usuario);
     setIsDeleteModalOpen(true);
   };
@@ -109,142 +144,128 @@ export default function Users() {
   };
 
   const handleUserCreated = () => {
-    // Aquí podrías refrescar la lista de usuarios
     console.log("Usuario creado exitosamente");
     showToast("Usuario creado exitosamente", "success");
-    // TODO: Refrescar la lista de usuarios desde la API
+    fetchUsers(currentPage); // Refresh the users list
   };
 
 
   const handleUserDeleted = () => {
-    // Aquí podrías refrescar la lista de usuarios
     console.log("Usuario eliminado exitosamente");
     showToast("Usuario eliminado exitosamente", "success");
-    // TODO: Refrescar la lista de usuarios desde la API
+    fetchUsers(); // Refresh the users list
   };
-  
-  // Original hardcoded array replaced with state
-  const [usuarios, setUsuarios] = useState([
-    {
-      id: "1",
-      name: "Ana García",
-      email: "ana.garcia@example.com",
-      password: "hash_pass_1",
-      salt: "salt123",
-      creation_date: "2025-01-15",
-      profile_pic_url: "https://images.unsplash.com/photo-1585554414787-09b821c321c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcHJvZmVzc2lvbmFsfGVufDF8fHx8MTc1OTIyMDYxOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      admin: false,
-      update_date: "2025-01-15"
-    },
-    {
-      id: "2",
-      name: "Bruno Díaz",
-      email: "bruno.diaz@example.com",
-      password: "hash_pass_2",
-      salt: "salt456",
-      creation_date: "2025-02-20",
-      profile_pic_url: "https://images.unsplash.com/photo-1585554414787-09b821c321c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcHJvZmVzc2lvbmFsfGVufDF8fHx8MTc1OTIyMDYxOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      admin: true,
-      update_date: "2025-02-20"
-    },
-    {
-      id: "3",
-      name: "Carla L M",
-      email: "carla.lm@example.com",
-      password: "hash_pass_3",
-      salt: "salt789",
-      creation_date: "2025-03-10",
-      profile_pic_url: "https://images.unsplash.com/photo-1585554414787-09b821c321c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcHJvZmVzc2lvbmFsfGVufDF8fHx8MTc1OTIyMDYxOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      admin: true,
-      update_date: "2025-03-10"
-    },
-    {
-      id: "4",
-      name: "David Soto",
-      email: "david.soto@example.com",
-      password: "hash_pass_4",
-      salt: "salta1b",
-      creation_date: "2025-04-05",
-      profile_pic_url: "https://images.unsplash.com/photo-1585554414787-09b821c321c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcHJvZmVzc2lvbmFsfGVufDF8fHx8MTc1OTIyMDYxOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      admin: true,
-      update_date: "2025-04-05"
-    },
-    {
-      id: "5",
-      name: "Elena Mora",
-      email: "elena.mora@example.com",
-      password: "hash_pass_5",
-      salt: "saltc2d",
-      creation_date: "2025-05-12",
-      profile_pic_url: "https://images.unsplash.com/photo-1585554414787-09b821c321c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcHJvZmVzc2lvbmFsfGVufDF8fHx8MTc1OTIyMDYxOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      admin: true,
-      update_date: "2025-05-12"
-    },
-    {
-      id: "6",
-      name: "Fernando Paz",
-      email: "fernando.paz@example.com",
-      password: "hash_pass_6",
-      salt: "salte3f",
-      creation_date: "2025-06-18",
-      profile_pic_url: "https://images.unsplash.com/photo-1585554414787-09b821c321c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcHJvZmVzc2lvbmFsfGVufDF8fHx8MTc1OTIyMDYxOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      admin: true,
-      update_date: "2025-06-18"
-    },
-    {
-      id: "7",
-      name: "Gisela Roca",
-      email: "gisela.roca@example.com",
-      password: "hash_pass_7",
-      salt: "saltg4h",
-      creation_date: "2025-07-21",
-      profile_pic_url: "https://images.unsplash.com/photo-1585554414787-09b821c321c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcHJvZmVzc2lvbmFsfGVufDF8fHx8MTc1OTIyMDYxOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      admin: true,
-      update_date: "2025-07-21"
-    },
-    {
-      id: "8",
-      name: "Hugo Luna",
-      email: "hugo.luna@example.com",
-      password: "hash_pass_8",
-      salt: "salti5j",
-      creation_date: "2025-08-01",
-      profile_pic_url: "https://images.unsplash.com/photo-1585554414787-09b821c321c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcHJvZmVzc2lvbmFsfGVufDF8fHx8MTc1OTIyMDYxOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      admin: true,
-      update_date: "2025-08-01"
-    },
-    {
-      id: "9",
-      name: "Irene Sol",
-      email: "irene.sol@example.com",
-      password: "hash_pass_9",
-      salt: "saltk6l",
-      creation_date: "2025-09-14",
-      profile_pic_url: "https://images.unsplash.com/photo-1585554414787-09b821c321c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcHJvZmVzc2lvbmFsfGVufDF8fHx8MTc1OTIyMDYxOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      admin: true,
-      update_date: "2025-09-14"
-    },
-    {
-      id: "10",
-      name: "Javier Ríos",
-      email: "javier.rios@example.com",
-      password: "hash_pass_10",
-      salt: "saltm7n",
-      creation_date: "2025-09-25",
-      profile_pic_url: "https://images.unsplash.com/photo-1585554414787-09b821c321c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxidXNpbmVzcyUyMHdvbWFuJTIwcHJvZmVzc2lvbmFsfGVufDF8fHx8MTc1OTIyMDYxOXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-      admin: true,
-      update_date: "2025-09-25"
+
+  // Fetch users from API
+  const fetchUsers = async (page: number = currentPage) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      console.log(`Fetching users for page ${page} with limit ${usersPerPage}`);
+      
+      // First, get the total count of users
+      const totalCount = await authRunner.runWithAuth(async (token) => {
+        const countResponse = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/users/count`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return countResponse.data.count || 0;
+      });
+
+      // Calculate total pages based on total count
+      const calculatedTotalPages = Math.ceil(totalCount / usersPerPage);
+      
+      // Then fetch the paginated users
+      const result: PaginatedResponse = await authRunner.runWithAuth(async (token) => {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/users/paginated`,
+          {
+            params: {
+              page: page,
+              limit: usersPerPage,
+            },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return response.data;
+      });
+
+      if (result) {
+        console.log('Fetched users:', result);
+        console.log('Total users count:', totalCount);
+        console.log('Calculated total pages:', calculatedTotalPages);
+        
+        const usersData = result.users || result.data || (Array.isArray(result) ? result : []);
+        setUsuarios(usersData);
+        
+        // Use the calculated values from the count endpoint
+        setTotalUsers(totalCount);
+        setTotalPages(calculatedTotalPages);
+        setCurrentPage(page);
+        
+        console.log('Pagination set:', { 
+          totalUsers: totalCount, 
+          totalPages: calculatedTotalPages, 
+          currentPage: page 
+        });
+      } else {
+        setError('No se pudieron cargar los usuarios');
+      }
+    } catch (error: any) {
+      console.error('Error fetching users:', error);
+      if (error.response?.status === 404) {
+        setError('Endpoint no encontrado');
+      } else if (error.response?.status === 401) {
+        setError('No autorizado para ver usuarios');
+      } else {
+        setError('Error al cargar los usuarios');
+      }
+      setUsuarios([]);
+    } finally {
+      setLoading(false);
     }
-  ]);
+  };
 
-  const filteredUsuarios = usuarios.filter(
-    (usuario) =>
-      usuario.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      usuario.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      usuario.id.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Load users on component mount
+  useEffect(() => {
+    if (!loadingTokens && accessToken) {
+      fetchUsers(1);
+    }
+  }, [accessToken, loadingTokens]);
 
-  return (
+  // Handle page change
+  const handlePageChange = async (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages || newPage === currentPage || loading) {
+      return;
+    }
+    
+    console.log(`Changing from page ${currentPage} to page ${newPage}`);
+    setCurrentPage(newPage);
+    await fetchUsers(newPage);
+  };
+
+  // Helper function to get profile image with placeholder
+  const getProfileImage = (url: string) => {
+    if (!url || url.trim() === '' || url === 'null' || url === 'undefined') {
+      return 'https://placehold.co/200';
+    }
+    return url;
+  };
+
+  const filteredUsuarios = usuarios.filter(usuario =>
+    searchTerm === '' ||
+    usuario.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    usuario.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    usuario.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (usuario.admin ? 'admin' : 'user').toLowerCase().includes(searchTerm.toLowerCase())
+  );  return (
     <ProtectedRoute>
     <div className="flex flex-row min-h-screen">
       <div className="w-1/6">
@@ -256,12 +277,30 @@ export default function Users() {
           {/* Header con título, buscador y botón crear */}
           <div className="mb-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-3xl font-semibold text-[#060025]">Usuarios</h2>
-              <CustomButton
-                label="Crear Usuario"
-                onClick={openCreateModal}
-                className="bg-[#FF4400] hover:bg-[#e63d00]"
-              />
+              <div className="flex items-center gap-4">
+                <h2 className="text-3xl font-semibold text-[#060025]">Usuarios</h2>
+                {!loading && (
+                  <span className="text-sm text-gray-500">
+                    {totalUsers} usuarios en total
+                  </span>
+                )}
+
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => fetchUsers(currentPage)}
+                  disabled={loading}
+                  className="px-3 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+                  title="Actualizar lista"
+                >
+                  ↻
+                </button>
+                <CustomButton
+                  label="Crear Usuario"
+                  onClick={openCreateModal}
+                  className="bg-[#FF4400] hover:bg-[#e63d00]"
+                />
+              </div>
             </div>
             <div className="relative max-w-md">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
@@ -272,10 +311,11 @@ export default function Users() {
               </span>
               <input
                 type="text"
-                placeholder="Buscar por nombre, email o ID..."
+                placeholder="Buscar por nombre, email, ID o rol..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 border border-gray-200 rounded focus:border-[#FF4400] focus:ring-[#FF4400] py-2 w-full"
+                disabled={loading}
               />
             </div>
           </div>
@@ -284,23 +324,68 @@ export default function Users() {
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
             {/* Header de la tabla */}
             <div className="grid grid-cols-12 gap-4 px-6 py-4 border-b border-gray-200" style={{ backgroundColor: "#060025" }}>
+              <div className="col-span-1"><span className="text-sm text-white">Avatar</span></div>
               <div className="col-span-2"><span className="text-sm text-white">ID</span></div>
-              <div className="col-span-4"><span className="text-sm text-white">Nombre</span></div>
-              <div className="col-span-3"><span className="text-sm text-white">Email</span></div>
+              <div className="col-span-2"><span className="text-sm text-white">Nombre</span></div>
+              <div className="col-span-2"><span className="text-sm text-white">Email</span></div>
+              <div className="col-span-2"><span className="text-sm text-white">Rol</span></div>
               <div className="col-span-3 flex"><span className="text-sm text-white">Acciones</span></div>
             </div>
 
             {/* Filas */}
             <div className="divide-y divide-gray-100">
-              {filteredUsuarios.length > 0 ? (
+              {loading ? (
+                <div className="px-6 py-12 text-center">
+                  <div className="flex justify-center items-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF4400]"></div>
+                    <span className="ml-3 text-gray-600">Cargando usuarios...</span>
+                  </div>
+                </div>
+              ) : error ? (
+                <div className="px-6 py-12 text-center">
+                  <p className="text-red-600 mb-4">{error}</p>
+                  <button
+                    onClick={() => fetchUsers(currentPage)}
+                    className="px-4 py-2 bg-[#FF4400] text-white rounded-md hover:bg-[#e63d00] transition-colors"
+                  >
+                    Reintentar
+                  </button>
+                </div>
+              ) : filteredUsuarios.length > 0 ? (
                 filteredUsuarios.map((usuario) => (
-                  <div key={usuario.id} className="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-gray-50 transition-colors">
-                    <div className="col-span-2"><span className="text-sm text-gray-600">{usuario.id}</span></div>
-                    <div className="col-span-4"><span className="text-sm text-gray-900">{usuario.name}</span></div>
-                    <div className="col-span-3"><span className="text-sm text-gray-600">{usuario.email}</span></div>
+                  <div key={usuario.id} className="grid grid-cols-12 gap-3 px-6 py-4 items-center hover:bg-gray-50 transition-colors">
+                    <div className="col-span-1 flex justify-center">
+                      <img
+                        src={getProfileImage(usuario.profile_pic_url)}
+                        alt={usuario.name}
+                        className="w-8 h-8 rounded-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = 'https://placehold.co/200';
+                        }}
+                      />
+                    </div>
+                    <div className="col-span-2 overflow-hidden">
+                      <span className="text-sm text-gray-600 break-words">{usuario.id}</span>
+                    </div>
+                    <div className="col-span-2 overflow-hidden">
+                      <span className="text-sm text-gray-900 break-words">{usuario.name}</span>
+                    </div>
+                    <div className="col-span-2 overflow-hidden">
+                      <span className="text-sm text-gray-600 break-words">{usuario.email}</span>
+                    </div>
+                    <div className="col-span-2 flex items-center">
+                      <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                        usuario.admin 
+                          ? 'bg-red-100 text-red-800' 
+                          : 'bg-blue-100 text-blue-800'
+                      }`}>
+                        {usuario.admin ? 'Admin' : 'User'}
+                      </span>
+                    </div>
 
                     {/* Acciones */}
-                    <div className="col-span-3 flex gap-5 ml-10">
+                    <div className="col-span-3 flex gap-2 items-center">
                       {/* BOTÓN OJO -> abre modal */}
                       <button
                         type="button"
@@ -335,6 +420,76 @@ export default function Users() {
               )}
             </div>
           </div>
+
+          {/* Pagination Controls */}
+          {!error && !loading && totalUsers > 0 && (
+            <div className="mt-6 flex items-center justify-between">
+              <div className="text-sm text-gray-600">
+                {`Mostrando ${((currentPage - 1) * usersPerPage) + 1} - ${Math.min(currentPage * usersPerPage, totalUsers)} de ${totalUsers} usuarios`}
+              </div>
+              
+              {totalPages > 1 ? (
+                <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage <= 1 || loading}
+                  className="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Anterior
+                </button>
+                
+                <div className="flex gap-1">
+                  {[...Array(Math.min(totalPages, 5))].map((_, index) => {
+                    let pageNum;
+                    if (totalPages <= 5) {
+                      pageNum = index + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = index + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + index;
+                    } else {
+                      pageNum = currentPage - 2 + index;
+                    }
+                    
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => handlePageChange(pageNum)}
+                        disabled={loading}
+                        className={`px-3 py-1 text-sm rounded-md transition-colors disabled:opacity-50 ${
+                          currentPage === pageNum
+                            ? 'bg-[#FF4400] text-white'
+                            : 'border border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        {loading && currentPage === pageNum ? (
+                          <div className="flex items-center">
+                            <div className="animate-spin rounded-full h-3 w-3 border-b border-white mr-1"></div>
+                            {pageNum}
+                          </div>
+                        ) : (
+                          pageNum
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+                
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage >= totalPages || loading}
+                  className="px-3 py-1 border border-gray-300 rounded-md text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Siguiente
+                </button>
+              </div>
+              ) : (
+                <div className="text-sm text-gray-500">
+                  Página 1 de 1
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </main>
 
@@ -359,7 +514,8 @@ export default function Users() {
         <DeleteUserModal
           user={selectedUser}
           onClose={closeDeleteModal}
-          onUserDeleted={(id) => {
+          onUserDeleted={(id: string) => {
+            // Remove user from local state immediately for better UX
             setUsuarios(prev => prev.filter(u => u.id !== id));
             handleUserDeleted();
           }}

@@ -10,13 +10,42 @@ interface ViewUserProps {
 }
 
 export default function ViewUser({ user }: ViewUserProps) {
+  const getProfileImage = (url: string) => {
+    // Return placeholder if no URL or if URL is empty/invalid
+    if (!url || url.trim() === '' || url === 'null' || url === 'undefined') {
+      return 'https://placehold.co/200';
+    }
+    return url;
+  };
+
+  const formatDate = (dateString: string) => {
+    if (!dateString || dateString.trim() === '' || dateString === 'null' || dateString === 'undefined') {
+      return null;
+    }
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch (error) {
+      return dateString; // Return original if can't parse
+    }
+  };
+
   return (
     <div>
       <div className="flex justify-center mb-6">
         <img
-          src={user.profile_pic_url}
+          src={getProfileImage(user.profile_pic_url)}
           alt={user.name}
           className="w-40 h-40 rounded-full object-cover"
+          onError={(e) => {
+            // Fallback to placeholder if image fails to load
+            const target = e.target as HTMLImageElement;
+            target.src = 'https://placehold.co/200';
+          }}
         />
       </div>
       <h3 className="flex justify-center mb-4 text-xl font-semibold text-[#060025]">
@@ -29,7 +58,7 @@ export default function ViewUser({ user }: ViewUserProps) {
             <label className="text-sm text-gray-600 block mb-1">Correo:</label>
             <p className="text-sm text-gray-900">{user.email}</p>
             <label className="text-sm text-gray-600 block mb-1">Fecha de creación:</label>
-            <p className="text-sm text-gray-900">{user.creation_date}</p>
+            <p className="text-sm text-gray-900">{formatDate(user.creation_date) || user.creation_date}</p>
           </div>
         </div>
 
@@ -39,7 +68,9 @@ export default function ViewUser({ user }: ViewUserProps) {
             <label className="text-sm text-gray-600 block mb-1">Rol:</label>
             <p className="text-sm text-gray-900">{user.admin ? 'Administrador' : 'Usuario'}</p>
             <label className="text-sm text-gray-600 block mb-1">Fecha de actualización:</label>
-            <p className="text-sm text-gray-900">{user.update_date}</p>
+            <p className="text-sm text-gray-900">
+              {formatDate(user.update_date) || 'Never updated'}
+            </p>
           </div>
         </div>
       </div>

@@ -1,5 +1,7 @@
 import { getProfileImageUrl } from '@/src/utils/imageUtils';
 
+import UserAvatar from './UserAvatar';
+
 interface ViewUserProps {
   user: {
     profile_pic_url: string;
@@ -32,15 +34,11 @@ export default function ViewUser({ user }: ViewUserProps) {
   return (
     <div>
       <div className="flex justify-center mb-6">
-        <img
-          src={getProfileImageUrl(user.profile_pic_url)}
-          alt={user.name}
-          className="w-40 h-40 rounded-full object-cover"
-          onError={(e) => {
-            // Fallback to placeholder if image fails to load
-            const target = e.target as HTMLImageElement;
-            target.src = 'https://placehold.co/200';
-          }}
+        <UserAvatar 
+          profilePicUrl={user.profile_pic_url}
+          name={user.name}
+          size="xl"
+          className="w-40 h-40"
         />
       </div>
       <h3 className="flex justify-center mb-4 text-xl font-semibold text-[#060025]">

@@ -5,6 +5,7 @@ import React from "react";
 import { LayoutGrid, Users as UsersIcon, FileText, CheckCircle, ToolCase, LogOut } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useAuth } from '@/src/context/AuthContext';
+import UserAvatar from './UserAvatar';
 
 const NAV = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutGrid },
@@ -17,10 +18,6 @@ const NAV = [
 export default function Sidebar() {
   const pathname = usePathname();
   const { logout, user } = useAuth();
-
-  // if (!user){
-  //   return <div>Nada</div>
-  // }
 
   return (
     <aside className="h-full w-full bg-[#060025] shadow-lg flex flex-col">
@@ -39,18 +36,14 @@ export default function Sidebar() {
         </div>
 
         <div className="flex flex-col items-center mb-6">
-          <div className="h-20 w-auto relative rounded-full overflow-hidden aspect-square">
-            <Image
-              src="/adam.jpg"
-              alt="profile photo"
-              fill
-              className="object-fill"
-              priority
-            />
-          </div>
+          <UserAvatar 
+            profilePicUrl={user?.profile_pic_url}
+            name={user?.name || "Usuario"}
+            size="xl"
+          />
 
-          <div className="text-white text-lg font-semibold">{user ? user.name : "Adam Sandler"}</div>
-          <div className="text-gray-500">Administrador</div>
+          <div className="text-white text-lg font-semibold mt-3">{user ? user.name : "Usuario"}</div>
+          <div className="text-gray-400 text-sm">{user?.admin ? "Administrador" : "Usuario"}</div>
         </div>
 
         <div className="border-t border-gray-700 my-4" />

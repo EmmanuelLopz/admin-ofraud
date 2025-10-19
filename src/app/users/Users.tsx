@@ -14,6 +14,7 @@ import { AuthRunner } from "@/src/wrappers/authRunner";
 import axios from "axios";
 import DeleteUserModal from "@/src/components/DeleteUserModal";
 import { getProfileImageUrl } from "@/src/utils/imageUtils";
+import UserAvatar from "@/src/components/UserAvatar";
 
 type User = {
   id: string;
@@ -368,14 +369,10 @@ export default function Users() {
                 filteredUsuarios.map((usuario) => (
                   <div key={usuario.id} className="grid grid-cols-12 gap-3 px-6 py-4 items-center hover:bg-gray-50 transition-colors">
                     <div className="col-span-1 flex justify-center">
-                      <img
-                        src={getProfileImage(usuario.profile_pic_url)}
-                        alt={usuario.name}
-                        className="w-8 h-8 rounded-full object-cover"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = 'https://placehold.co/200';
-                        }}
+                      <UserAvatar 
+                        profilePicUrl={usuario.profile_pic_url}
+                        name={usuario.name}
+                        size="sm"
                       />
                     </div>
                     <div className="col-span-2 overflow-hidden">

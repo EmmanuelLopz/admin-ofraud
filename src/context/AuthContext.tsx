@@ -21,6 +21,7 @@ type User = {
     name: string;
     email: string;
     admin: boolean;
+    profile_pic_url?: string;
 }
 
 type AuthContextType = {
@@ -45,8 +46,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
-        console.log("Restoring session from localStorage");
-
         setLoadingTokens(true);  
         if(typeof window === "undefined") return;
 
@@ -54,17 +53,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const storedRefeshToken = localStorage.getItem("refreshToken");
 
         if(storedAccesToken && storedRefeshToken){
-            console.log("Refrescando el token de acceso con el token de refresco");
-
             axios.post("http://localhost:3001/auth/refresh", {
                 refreshToken: storedRefeshToken,
             })
             .then(res => {
-                // si funciona y los guardo, ademas acceso a los 
                 setAccessToken(res.data.accessToken);
                 setRefreshToken(res.data.refreshToken);
 
-                console.log("Sacando datos del usuario");
                 // Fetch profile when restoring session
                 axios.get("http://localhost:3001/auth/profile", {
                     headers: { Authorization: `Bearer ${res.data.accessToken}` },
@@ -72,21 +67,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 .then(res => setUser(res.data))
                 .catch(err => console.error("Error fetching profile:", err));
 
-
             })
             .catch(err => {
-                // si no funciona los borro 
                 clearTokens();
                 console.error("Error validating access token:", err);
-                console.error(user ? user.name : "Unknown user", "session expired");
             })
             .finally(() => {
-                console.log("Finished restoring session");
                 setLoadingTokens(false);
             });
         } else {
-            // No stored tokens, stop loading
-            console.log("No stored tokens found");
             setLoadingTokens(false);
         }
 
@@ -115,31 +104,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }, [clearTokens]);
 
     const login = useCallback( async (email: string, password: string) => {
-        console.log("Attempting login for:", email);
-        const response = await axios.post("http://localhost:3001/auth/login", {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/auth/login`, {
             email, 
             password,
         });
 
-        console.log("Login response status:", response.status);
         if(response.status == 201) {
             const tokens: Tokens = {
                 accessToken: response.data.accessToken,
                 refreshToken: response.data.refreshToken,
             };
 
-            console.log("Tokens received, fetching user profile...");
             // Fetch user profile 
-            const profileRes = await axios.get("http://localhost:3001/auth/profile", {
+            const profileRes = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/auth/profile`, {
                 headers: { Authorization: `Bearer ${response.data.accessToken}` },
             });
 
-            console.log("Profile fetched:", profileRes.data);
-            // aqui se puede revisar si el user es admin - pero es de lado del front
-
             setTokens(tokens);
             setUser(profileRes.data);
-            console.log("Login completed successfully");
 
         } else {
             throw new Error("Login Failed");
@@ -151,7 +133,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if(!refreshToken) return false;
 
         try {
-            const response = await axios.post("http://localhost:3001/auth/refresh", {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/auth/refresh`, {
                 refreshToken,
             });
 

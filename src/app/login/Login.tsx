@@ -51,9 +51,8 @@ export default function Login() {
       <Image src="/LogoOfraud.png" alt="Logo O-Fraud"
         width={110}
         height={110}
-        className="login-logo"
+        className="login-logo mb-4"
         priority/>
-      <h3 className="size-16 flex-none"></h3>
 
       <form className="login-card" onSubmit={handleSubmit}>
         <h2 className="m-0 mb-4 text-xl font-semibold">¡Bienvenido a O-Fraud!</h2>
@@ -72,19 +71,6 @@ export default function Login() {
           {loading || loadingTokens ? "Cargando..." : "Iniciar Sesión"}
         </button>
 
-        <div className="text-center pt-4">
-              <p className="text-gray-600">
-                ¿No tienes cuenta?{" "}
-                <button
-                  type="button"
-                  className="hover:underline"
-                  style={{ color: '#FF4400' }}
-                  onClick={() => router.replace("/register")}
-                >
-                  Crear cuenta
-                </button>
-              </p>
-            </div>
       </form>
     </main>
   );

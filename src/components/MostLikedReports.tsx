@@ -63,7 +63,7 @@ export default function MostLikedReports() {
     };
 
     fetchGraphData();
-  }, [loadingTokens, authRunner]);
+  }, []);
 
     const datos = {
         labels: chart.map((r) => r.title),

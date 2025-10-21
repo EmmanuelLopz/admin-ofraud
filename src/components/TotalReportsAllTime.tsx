@@ -89,7 +89,7 @@ export default function TotalReportsAllTime() {
         };
 
         fetchGraphData();
-      }, [loadingTokens, authRunner]);
+      }, []);
 
     const datos = {
         labels: chart.map(r => r.date),

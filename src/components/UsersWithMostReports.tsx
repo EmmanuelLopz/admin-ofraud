@@ -78,7 +78,7 @@ export default function UsersWithMostReports() {
         };
 
         fetchGraphData();
-      }, [loadingTokens, authRunner]);
+      }, []);
 
     const data = {
         labels: chart.map(r => r.name),

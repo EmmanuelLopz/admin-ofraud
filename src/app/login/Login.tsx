@@ -8,6 +8,7 @@ import * as Yup from 'yup';
 
 import { useRouter } from 'next/navigation';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
+import Link from 'next/link';
 
 const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
@@ -72,6 +73,23 @@ export default function Login() {
         </button>
 
       </form>
+
+      <div className="mt-auto py-4">
+        <div className="flex justify-center mb-4 p-4 rounded-lg" style={{ backgroundColor: '#060025' }}>
+          <a href="https://redporlaciberseguridad.org/" target="_blank" rel="noopener noreferrer">
+            <img 
+              src="https://redporlaciberseguridad.org/wp-content/uploads/2025/09/Logo-escudo-amarillo-scaled-282x300.png" 
+              alt="Red por la Ciberseguridad" 
+              className="h-20 w-auto"
+            />
+          </a>
+        </div>
+        <div className="text-center text-sm text-gray-500">
+          <Link href="/terms" className="hover:underline">
+            Aviso de Privacidad
+          </Link>
+        </div>
+      </div>
     </main>
   );
 }

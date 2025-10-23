@@ -277,7 +277,7 @@ export default function Users() {
     searchTerm === '' ||
     usuario.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     usuario.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    usuario.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    String(usuario.id).includes(searchTerm.toLocaleLowerCase()) ||
     (usuario.admin ? 'admin' : 'user').toLowerCase().includes(searchTerm.toLowerCase())
   );  return (
     <ProtectedRoute>

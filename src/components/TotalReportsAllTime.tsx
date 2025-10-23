@@ -92,7 +92,7 @@ export default function TotalReportsAllTime() {
       }, []);
 
     const datos = {
-        labels: chart.map(r => r.date),
+        labels: chart.map(r => r.date.substring(0,10)),
         datasets: [{
             label: 'Usuarios',
             data: chart.map(r => r.total_users),

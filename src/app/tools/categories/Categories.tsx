@@ -38,7 +38,7 @@ export default function Categories() {
             if(loadingTokens) return;
 
             const data = await authRunner.runWithAuth(async (token) => {
-                const res = await axios.get("http://localhost:3001/category", {
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/category`, {
                     headers: { Authorization: `Bearer ${token}` },
                 })
                 return res.data;

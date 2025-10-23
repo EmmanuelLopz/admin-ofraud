@@ -41,7 +41,7 @@ export default function CategoryAddModal({ onClose, setRefreshCounter }: Categor
         };
 
         const data = await authRunner.runWithAuth(async (token) => {
-            const res = await axios.post('http://localhost:3001/category', newCategory, {
+            const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/category`, newCategory, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             return res.data;

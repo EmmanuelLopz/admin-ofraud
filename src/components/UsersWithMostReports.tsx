@@ -59,7 +59,7 @@ export default function UsersWithMostReports() {
           try {
             const data = await authRunner.runWithAuth(async (token) => {
               const response = await axios.get(
-                "http://localhost:3001/stats/top-users",
+                `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/stats/top-users`,
                 { headers: { Authorization: `Bearer ${token}` } }
               );
               return response.data;

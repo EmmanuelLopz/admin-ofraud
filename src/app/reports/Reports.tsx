@@ -32,7 +32,7 @@ export default function Reports() {
       const data = await authRunner.runWithAuth(async (token) => {
         if(loadingTokens) return;
 
-          const res = await axios.get("http://localhost:3001/reports", {
+          const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/reports`, {
               headers: { Authorization: `Bearer ${token}` },
           })
 
@@ -50,7 +50,7 @@ export default function Reports() {
           if (loadingTokens) return;
 
           const res = await axios.get(
-            `http://localhost:3001/category/${repo.category_id}`,
+            `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/category/${repo.category_id}`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }

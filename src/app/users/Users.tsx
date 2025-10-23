@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
-import { Edit, Eye, Trash2, X, Plus } from "lucide-react"; // <- X para cerrar, Plus para crear
+import { Edit, Eye, Trash2, X, Plus } from "lucide-react";
 import Modal from "../../components/ViewUserModal";
 import CreateUserModal from "../../components/CreateUserModal";
 import UpdateUserModal from "../../components/UpdateUserModal";
@@ -44,7 +44,7 @@ type PaginatedResponse = {
 
 export default function Users() {
   const [searchTerm, setSearchTerm] = useState("");
-  const { accessToken, tryRefreshToken, logout, loadingTokens } = useAuth();
+  const { accessToken, tryRefreshToken, logout, loadingTokens, user: currentUser } = useAuth();
   const [toast, setToast] = useState<{show: boolean, message: string, type: 'success' | 'error'}>({
     show: false,
     message: '',
@@ -415,13 +415,15 @@ export default function Users() {
                         <Edit size={16} />
                       </button>
 
+                      {String(usuario.id) !== String(currentUser?.id) && (
                       <button
                         type="button"
                         className="bg-red-600 hover:bg-red-700 text-white border-0 rounded px-2 py-1 text-sm flex items-center"
                         onClick={() => openDeleteModal(usuario)}
-                      >
+                      >    
                         <Trash2 size={16} />
                       </button>
+                      )}
                     </div>
                   </div>
                 ))

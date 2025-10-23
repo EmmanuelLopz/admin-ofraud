@@ -77,6 +77,24 @@ export default function Sidebar() {
             })}
           </nav>
 
+          {/* Footer with external link and image */}
+          <div className="mt-auto py-4">
+            <div className="flex justify-center mb-4">
+              <a href="https://redporlaciberseguridad.org/" target="_blank" rel="noopener noreferrer">
+                <img 
+                  src="https://redporlaciberseguridad.org/wp-content/uploads/2025/09/Logo-escudo-amarillo-scaled-282x300.png" 
+                  alt="Red por la Ciberseguridad" 
+                  className="h-20 w-auto"
+                />
+              </a>
+            </div>
+            <div className="text-center text-sm text-gray-400">
+              <Link href="/terms" className="hover:underline">
+                Aviso de Privacidad
+              </Link>
+            </div>
+          </div>
+
           <div className="flex flex-row text-white p-6 m-1 gap-2 items-center justify-center cursor-pointer"> 
             <div 
               className="flex border-b-2 border-transparent hover:border-red-500 transition-all gap-2"

@@ -186,12 +186,12 @@ export default function Validation() {
 
                   <div className="flex flex-row gap-2 pt-8">
                     <CustomButton 
-                      label="Accept" 
+                      label="Aceptar" 
                       className="bg-green-500 hover:bg-green-600 w-1/2"
                       onClick={()=>openModal(reporte.id, "accept")}
                     />
                     <CustomButton 
-                      label="Reject" 
+                      label="Rechazar" 
                       className="bg-red-500 hover:bg-red-600 w-1/2"
                       onClick={()=>openModal(reporte.id, "reject")}
                     />
@@ -208,7 +208,7 @@ export default function Validation() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white/40 backdrop-blur-lg border border-white/30 rounded-lg p-6 w-1/5 shadow-lg">
             <h2 className="text-xl font-semibold mb-4">Confirmar acción</h2>
-            <p>¿Estás seguro que quieres {action} este reporte?</p>
+            <p>¿Estás seguro que quieres {action === 'accept' ? 'aceptar' : 'rechazar'} este reporte?</p>
             <div className="mt-6 flex justify-center gap-4">
               <button
                 className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"

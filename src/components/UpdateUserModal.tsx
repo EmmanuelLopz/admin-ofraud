@@ -83,7 +83,6 @@ export default function UpdateUserModal({ user, onClose, onUserUpdated, authRunn
           name: formData.name,
           email: formData.email,
           profile_pic_url: finalProfilePicUrl,
-          admin: formData.admin
         };
 
         // Only include password if it's provided
@@ -235,22 +234,6 @@ export default function UpdateUserModal({ user, onClose, onUserUpdated, authRunn
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
-          </div>
-
-          {/* Admin Checkbox */}
-          <div className="flex items-center">
-            <input
-              type="checkbox"
-              id="admin"
-              name="admin"
-              checked={formData.admin}
-              onChange={handleChange}
-              className="h-4 w-4 text-[#FF4400] focus:ring-[#FF4400] border-gray-300 rounded"
-              disabled={loading}
-            />
-            <label htmlFor="admin" className="ml-2 block text-sm text-gray-700">
-              Usuario administrador
-            </label>
           </div>
 
           {/* Action Buttons */}

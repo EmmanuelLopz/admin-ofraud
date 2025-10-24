@@ -64,7 +64,7 @@ export default function TotalReportsAllTime() {
     useEffect(() => {
         if (loadingTokens) return;
         
-        const date_req = "2025-10-05";
+        const date_req = "2025-1-10";
 
         const fetchGraphData = async () => {
           try {

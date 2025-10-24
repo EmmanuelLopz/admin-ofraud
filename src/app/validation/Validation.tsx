@@ -211,17 +211,21 @@ export default function Validation() {
             <p>¿Estás seguro que quieres {action === 'accept' ? 'aceptar' : 'rechazar'} este reporte?</p>
             <div className="mt-6 flex justify-center gap-4">
               <button
-                className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400"
+                className={`px-4 py-2 rounded ${
+                  action === 'reject' 
+                    ? 'bg-red-500 hover:bg-red-600 text-white' 
+                    : 'bg-gray-300 hover:bg-gray-400'
+                }`}
                 onClick={cancel}
               >
                 Cancelar
               </button>
               
               <button
-                className={`px-4 py-2 rounded text-white ${
-                  action === "reject"
-                    ? "bg-red-500 hover:bg-red-600"
-                    : "bg-green-500 hover:bg-green-600"
+                className={`px-4 py-2 rounded ${
+                  action === 'reject'
+                    ? 'bg-gray-300 hover:bg-gray-400 text-black'
+                    : 'bg-green-500 hover:bg-green-600 text-white'
                 }`}
                 onClick={confirm}
               >

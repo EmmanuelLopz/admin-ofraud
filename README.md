@@ -98,16 +98,16 @@ admin-ofraud/
 ├── package.json
 ├── postcss.config.mjs
 ├── src/                    # Ruta principal del sistema
-│   │
+│   │  
 │   ├── app/                # Clases de frontend principales
-|   |
+│   │   
 │   ├── components/
 │   ├── context/
 │   ├── hooks/
 │   ├── types/
 │   ├── utils/
 │   └── wrappers/           # Clase de autenticación
-|
+│
 ├── tailwind.config.ts      # Extención de estilos
 └── tsconfig.json
 ```

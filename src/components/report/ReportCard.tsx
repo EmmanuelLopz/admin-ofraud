@@ -2,6 +2,7 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import Card from '../Card';
 import { Reporte } from '@/src/types/types';
+import { getProfileImageUrl } from '@/src/utils/imageUtils';
 
 type ReportCardProps = {
   reporte: Reporte;
@@ -35,7 +36,7 @@ function ReportCard({
             {reporte.title}
           </div>
           <img
-            src={reporte.report_pic_url}
+            src={getProfileImageUrl(reporte.report_pic_url)}
             alt={reporte.title}
             className="w-full h-48 object-cover rounded-md mb-5 shadow-xl"
           />

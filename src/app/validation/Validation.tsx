@@ -8,6 +8,9 @@ import { AuthRunner } from "@/src/wrappers/authRunner";
 import { useAuth } from "@/src/context/AuthContext";
 import { Reporte } from "@/src/types/types";
 import axios from "axios";
+import UpdateReportModal from "@/src/components/UpdateReportModal";
+import Toast from "@/src/components/Toast";
+import { Edit } from "lucide-react";
 
 export default function Validation() {
   const [reports, setReports] = useState<Reporte[]>([]);
@@ -15,7 +18,14 @@ export default function Validation() {
   const [error, setError] = useState<string | null>(null);
   const [action, setAction] = useState<String>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedReportIndex, setSelectedReportIndex] = useState<number | null>(null);
+  const [selectedReport, setSelectedReport] = useState<Reporte | null>(null);
+  const [toast, setToast] = useState<{show: boolean, message: string, type: 'success' | 'error'}>({
+    show: false,
+    message: '',
+    type: 'success'
+  });
   const { accessToken, tryRefreshToken, logout, loadingTokens } = useAuth();
   
   
@@ -27,6 +37,33 @@ export default function Validation() {
           },
           logout
     );
+
+  const showToast = (message: string, type: 'success' | 'error') => {
+    setToast({
+      show: true,
+      message,
+      type
+    });
+  };
+
+  const hideToast = () => {
+    setToast(prev => ({ ...prev, show: false }));
+  };
+
+  const openUpdateModal = (report: Reporte) => {
+    setSelectedReport(report);
+    setIsUpdateModalOpen(true);
+  };
+
+  const closeUpdateModal = () => {
+    setIsUpdateModalOpen(false);
+    setSelectedReport(null);
+  };
+
+  const handleReportUpdated = () => {
+    showToast("Reporte actualizado exitosamente", "success");
+    fetchReportsByStatus();
+  };
 
   // Fetch reports by status ID (1 for pending validation)
   const fetchReportsByStatus = async () => {
@@ -175,29 +212,35 @@ export default function Validation() {
           ) : (
             <div className="flex flex-wrap justify-center gap-x-24 gap-y-10">
               {reports.map((reporte, i) => (
-                <ReportCard 
-                  key={reporte.id} 
-                  reporte={reporte} 
-                  className="
-                    hover:scale-105 
-                    transition-transform
-                  "
-                >
-
-                  <div className="flex flex-row gap-2 pt-8">
-                    <CustomButton 
-                      label="Aceptar" 
-                      className="bg-green-500 hover:bg-green-600 w-1/2"
-                      onClick={()=>openModal(reporte.id, "accept")}
-                    />
-                    <CustomButton 
-                      label="Rechazar" 
-                      className="bg-red-500 hover:bg-red-600 w-1/2"
-                      onClick={()=>openModal(reporte.id, "reject")}
-                    />
-                  </div>
-                  
-                </ReportCard>
+                <div key={reporte.id} className="relative">
+                  <ReportCard 
+                    reporte={reporte} 
+                    className="
+                      hover:scale-105 
+                      transition-transform
+                    "
+                  >
+                    <div className="flex flex-row gap-2 pt-8">
+                      <CustomButton 
+                        label="Editar" 
+                        className="bg-blue-500 hover:bg-blue-600 w-full mb-2"
+                        onClick={()=>openUpdateModal(reporte)}
+                      />
+                    </div>
+                    <div className="flex flex-row gap-2">
+                      <CustomButton 
+                        label="Aceptar" 
+                        className="bg-green-500 hover:bg-green-600 w-1/2"
+                        onClick={()=>openModal(reporte.id, "accept")}
+                      />
+                      <CustomButton 
+                        label="Rechazar" 
+                        className="bg-red-500 hover:bg-red-600 w-1/2"
+                        onClick={()=>openModal(reporte.id, "reject")}
+                      />
+                    </div>
+                  </ReportCard>
+                </div>
               ))}
             </div>
           )}
@@ -234,6 +277,25 @@ export default function Validation() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Update Report Modal */}
+      {isUpdateModalOpen && selectedReport && (
+        <UpdateReportModal
+          report={selectedReport}
+          onClose={closeUpdateModal}
+          onReportUpdated={handleReportUpdated}
+          authRunner={authRunner}
+        />
+      )}
+
+      {/* Toast Notification */}
+      {toast.show && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={hideToast}
+        />
       )}
     </div>
     </ProtectedRoute>

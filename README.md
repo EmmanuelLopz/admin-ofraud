@@ -118,8 +118,14 @@ admin-ofraud/
 
 | Variable        | Descripción | Valor de ejemplo / Notas |
 | --------------- | ----------- | ------------------------ |
-| NOMBRE_VARIABLE | Descripción | Ejemplo                  |
-| NOMBRE_VARIABLE | Descripción | Ejemplo                  |
+| NEXT_PUBLIC_GEMINI_API_KEY | Api Key a utilizar para modelos de Gemini |       AIzaSyABCDEFGH1234567890abcdefghijklmno            |
+| NEXT_PUBLIC_API_URL | Url utilizada para el Backend | http://localhost:3001|
+
+Puedes copiar el ejemplo, asegurate de utilizar el API Key de Gemini. (La implementación del agente no es segura para un entorno de producción).
+
+```bash
+cp .env.example .env
+```
 
 ---
 

@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 
 type CustomButtonProps = {
-  label: string;
+  label: string | React.ReactNode;
   onClick?: () => void;
   className?: string;
 } & React.ComponentProps<'button'>;

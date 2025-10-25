@@ -10,7 +10,8 @@ import { Reporte } from "@/src/types/types";
 import axios from "axios";
 import UpdateReportModal from "@/src/components/UpdateReportModal";
 import Toast from "@/src/components/Toast";
-import { Edit } from "lucide-react";
+import { Edit, Sparkles } from "lucide-react";
+import LLMSuggestionModal from "@/src/components/LLMSuggestionModal";
 
 export default function Validation() {
   const [reports, setReports] = useState<Reporte[]>([]);
@@ -19,6 +20,7 @@ export default function Validation() {
   const [action, setAction] = useState<String>("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isLLMModalOpen, setIsLLMModalOpen] = useState(false);
   const [selectedReportIndex, setSelectedReportIndex] = useState<number | null>(null);
   const [selectedReport, setSelectedReport] = useState<Reporte | null>(null);
   const [toast, setToast] = useState<{show: boolean, message: string, type: 'success' | 'error'}>({
@@ -63,6 +65,16 @@ export default function Validation() {
   const handleReportUpdated = () => {
     showToast("Reporte actualizado exitosamente", "success");
     fetchReportsByStatus();
+  };
+
+  const openLLMModal = (report: Reporte) => {
+    setSelectedReport(report);
+    setIsLLMModalOpen(true);
+  };
+
+  const closeLLMModal = () => {
+    setIsLLMModalOpen(false);
+    setSelectedReport(null);
   };
 
   // Fetch reports by status ID (1 for pending validation)
@@ -223,8 +235,18 @@ export default function Validation() {
                     <div className="flex flex-row gap-2 pt-8">
                       <CustomButton 
                         label="Editar" 
-                        className="bg-blue-500 hover:bg-blue-600 w-full mb-2"
+                        className="bg-blue-500 hover:bg-blue-600 w-1/2 mb-2"
                         onClick={()=>openUpdateModal(reporte)}
+                      />
+                      <CustomButton 
+                        label={
+                          <span className="flex items-center justify-center gap-2">
+                            <Sparkles className="w-4 h-4" />
+                            Analizar con IA
+                          </span>
+                        }
+                        className="bg-purple-500 hover:bg-purple-600 w-1/2 mb-2"
+                        onClick={()=>openLLMModal(reporte)}
                       />
                     </div>
                     <div className="flex flex-row gap-2">
@@ -286,6 +308,14 @@ export default function Validation() {
           onClose={closeUpdateModal}
           onReportUpdated={handleReportUpdated}
           authRunner={authRunner}
+        />
+      )}
+
+      {/* LLM Suggestion Modal */}
+      {isLLMModalOpen && selectedReport && (
+        <LLMSuggestionModal
+          report={selectedReport}
+          onClose={closeLLMModal}
         />
       )}
 

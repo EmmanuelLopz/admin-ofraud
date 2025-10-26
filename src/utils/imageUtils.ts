@@ -13,6 +13,24 @@ export const getImageUrl = (filename: string): string => {
 };
 
 /**
+ * Sanitiza una URL para asegurarse que sólo puede ser un enlace HTTP(S) o un data:image
+ */
+export const sanitizeImageSrc = (src: string): string => {
+  if (!src || typeof src !== 'string') return 'https://placehold.co/200';
+  const trimmed = src.trim();
+  // Only allow http(s) URLs or "data:image/<format>;base64,..." for trusted FileReader images
+  if (
+    trimmed.startsWith('http://') ||
+    trimmed.startsWith('https://') ||
+    /^data:image\/[a-zA-Z]+;base64,/.test(trimmed)
+  ) {
+    return trimmed;
+  }
+  // Otherwise, fallback placeholder
+  return 'https://placehold.co/200';
+};
+
+/**
  * Obtiene la URL de imagen de perfil con fallback a placeholder
  * @param profilePicUrl - URL de la imagen de perfil desde la base de datos
  * @returns URL de imagen o placeholder
@@ -21,12 +39,10 @@ export const getProfileImageUrl = (profilePicUrl: string): string => {
   if (!profilePicUrl || profilePicUrl.trim() === '' || profilePicUrl === 'null' || profilePicUrl === 'undefined') {
     return 'https://placehold.co/200';
   }
-  
-  // Si ya es una URL completa, la devolvemos tal como está
+  // Si ya es una URL completa, la devolvemos tal como está (pero sanitizada)
   if (profilePicUrl.startsWith('http')) {
-    return profilePicUrl;
+    return sanitizeImageSrc(profilePicUrl);
   }
-  
-  // Si es un filename, construimos la URL de descarga
-  return getImageUrl(profilePicUrl);
+  // Si es un filename, construimos la URL de descarga (and sanitize)
+  return sanitizeImageSrc(getImageUrl(profilePicUrl));
 };

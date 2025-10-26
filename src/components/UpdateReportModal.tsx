@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { X, Upload } from 'lucide-react';
 import { AuthRunner } from '@/src/wrappers/authRunner';
 import { useFileUpload } from '@/src/hooks/useFileUpload';
-import { getProfileImageUrl } from '@/src/utils/imageUtils';
+import { getProfileImageUrl, sanitizeImageSrc } from '@/src/utils/imageUtils';
 import axios from 'axios';
 import { Category, Reporte } from '@/src/types/types';
 
@@ -136,7 +136,7 @@ export default function UpdateReportModal({ report, onClose, onReportUpdated, au
     }
   };
 
-  const currentImageUrl = imagePreview || getProfileImageUrl(formData.report_pic_url);
+  const currentImageUrl = imagePreview ? sanitizeImageSrc(imagePreview) : getProfileImageUrl(formData.report_pic_url);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">

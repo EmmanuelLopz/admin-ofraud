@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { X, Upload, User, Eye, EyeOff } from 'lucide-react';
 import { AuthRunner } from '@/src/wrappers/authRunner';
 import { useFileUpload } from '@/src/hooks/useFileUpload';
-import { getProfileImageUrl } from '@/src/utils/imageUtils';
+import { getProfileImageUrl, sanitizeImageSrc } from '@/src/utils/imageUtils';
 import axios from 'axios';
 
 interface User {
@@ -113,7 +113,7 @@ export default function UpdateUserModal({ user, onClose, onUserUpdated, authRunn
     }
   };
 
-  const currentImageUrl = imagePreview || getProfileImageUrl(formData.profile_pic_url);
+  const currentImageUrl = sanitizeImageSrc(imagePreview || getProfileImageUrl(formData.profile_pic_url));
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">

@@ -18,11 +18,12 @@ export const getImageUrl = (filename: string): string => {
 export const sanitizeImageSrc = (src: string): string => {
   if (!src || typeof src !== 'string') return 'https://placehold.co/200';
   const trimmed = src.trim();
-  // Only allow http(s) URLs or "data:image/<format>;base64,..." for trusted FileReader images
+  // Only allow http(s) URLs or "data:image/<SAFE_FORMAT>;base64,..." for trusted FileReader images
+  const SAFE_IMAGE_FORMATS = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'];
   if (
     trimmed.startsWith('http://') ||
     trimmed.startsWith('https://') ||
-    /^data:image\/[a-zA-Z]+;base64,/.test(trimmed)
+    /^data:image\/(png|jpg|jpeg|gif|webp|bmp);base64,/.test(trimmed)
   ) {
     return trimmed;
   }

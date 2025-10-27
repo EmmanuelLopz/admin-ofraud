@@ -53,9 +53,9 @@ export default function Categories() {
                 const iconKey = toPascalCase(lucideIconName);
                 const IconComponent = (Icons as any)[iconKey] as LucideIcon || Icons.HelpCircle;
 
-                const { hex, rgba } = getRandomColor();
+                            const { hex, rgba } = getCategoryColor(i);
 
-                return { ...cat, hex, rgba, IconComponent };
+                            return { ...cat, hex, rgba, IconComponent };
             });
 
             setCategories(newCategories);
@@ -73,17 +73,34 @@ export default function Categories() {
             .join('');
     }
 
-    function getRandomColor() {
-        const r = Math.floor(Math.random() * 256); // 0–255
-        const g = Math.floor(Math.random() * 256);
-        const b = Math.floor(Math.random() * 256);
+    // Fixed palette of 12 colors. Will repeat if there are more categories.
+    const CATEGORY_COLORS = [
+        '#FF6633', // orange
+        '#FFB399', // light orange
+        '#FF33FF', // magenta
+        '#FFFF99', // light yellow
+        '#00B3E6', // cyan
+        '#E6B333', // tan
+        '#3366E6', // blue
+        '#999966', // olive
+        '#99FF99', // light green
+        '#B34D4D', // dark red
+        '#80B300', // green
+        '#809900', // olive 2
+    ];
 
-        const hex = `#${[r, g, b]
-            .map((c) => c.toString(16).padStart(2, '0'))
-            .join('')}`;
+    function hexToRgba(hex: string, alpha = 0.15) {
+        const h = hex.replace('#', '');
+        const bigint = parseInt(h, 16);
+        const r = (bigint >> 16) & 255;
+        const g = (bigint >> 8) & 255;
+        const b = bigint & 255;
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
 
-        const rgba = `rgba(${r}, ${g}, ${b}, 0.5)`;
-
+    function getCategoryColor(index: number) {
+        const hex = CATEGORY_COLORS[index % CATEGORY_COLORS.length];
+        const rgba = hexToRgba(hex, 0.12); // subtle shadow
         return { hex, rgba };
     }
 

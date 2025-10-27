@@ -25,7 +25,23 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; img-src 'self' data: https://placehold.co https:; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline';",
+            value: [
+              "default-src 'self'",
+              // Allow images from self, data URIs, placeholder services and HTTPS sources
+              "img-src 'self' data: https://placehold.co https: https://images.unsplash.com",
+              // Allow scripts from self and necessary inline scripts
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline'",
+              // Allow styles from self and inline styles needed for Next.js
+              "style-src 'self' 'unsafe-inline'",
+              // Allow API connections to your backend
+              "connect-src 'self' http://localhost:3001",
+              // Allow form submissions to your backend
+              "form-action 'self' http://localhost:3001",
+              // Font sources
+              "font-src 'self' data:",
+              // Media sources
+              "media-src 'self'",
+            ].join('; '),
           },
         ],
       },

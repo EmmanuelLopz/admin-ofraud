@@ -46,7 +46,7 @@ export default function ReporteDetalle() {
                   <h2 className="text-lg font-normal text-gray-500 mb-2">Comentario{reporte.comments.length > 1 ? 's':''}</h2>
 
                   <div className="flex flex-col w-full gap-4">
-                      { reporte.comments.map((comment, index) => (
+                      { reporte.comments.map((comment: any, index: number) => (
                           <CommentCard 
                               key={index} 
                               comment={comment} 

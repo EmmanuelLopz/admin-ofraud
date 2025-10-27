@@ -23,6 +23,7 @@ type Reporte = {
   creation_date: string; // o Date si lo parseas al recibirlo
   status_id: number;
   category: Category | null;
+  comments: Commenta[]; // Added comments array
 };
 
 type Category = {

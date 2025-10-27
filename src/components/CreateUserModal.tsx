@@ -60,15 +60,29 @@ export default function CreateUserModal({ onClose, onUserCreated, authRunner }: 
       errors.name = 'El nombre es requerido';
     }
 
-    if (!formData.email.trim()) {
+    // Email validation with length check and efficient regex
+    const email = formData.email.trim();
+    if (!email) {
       errors.email = 'El correo es requerido';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = 'El correo no tiene un formato válido';
+    } else if (email.length > 254) { // RFC 5321
+      errors.email = 'El correo es demasiado largo';
+    } else {
+      // Simple, linear-time regex that prevents ReDoS
+      const emailRegex = new RegExp('^[^\\s@]{1,64}@[^\\s@]{1,255}$');
+      const hasValidFormat = emailRegex.test(email);
+      const hasSingleAt = (email.match(/@/g) || []).length === 1;
+      const hasDot = email.includes('.');
+      
+      if (!hasValidFormat || !hasSingleAt || !hasDot) {
+        errors.email = 'El correo no tiene un formato válido';
+      }
     }
 
-    if (!formData.password) {
+    // Validate password field
+    const passwordValue = formData.password;
+    if (!passwordValue) {
       errors.password = 'La contraseña es requerida';
-    } else if (formData.password.length < 8) {
+    } else if (passwordValue.length < 8) {
       errors.password = 'La contraseña debe tener al menos 8 caracteres';
     }
 

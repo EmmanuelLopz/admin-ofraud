@@ -107,13 +107,29 @@ Analiza este reporte y responde SOLO con el JSON solicitado.`;
       console.log('LLM Raw Response:', result.text);
       const llmText = result.text || '';
       
-      // Extract JSON from the response (in case there's extra text)
-      const jsonMatch = llmText.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
+      // Extract JSON from the response using a non-backtracking approach
+      let jsonStartIndex = llmText.indexOf('{');
+      let jsonEndIndex = llmText.lastIndexOf('}');
+      
+      if (jsonStartIndex === -1 || jsonEndIndex === -1 || jsonEndIndex <= jsonStartIndex) {
         throw new Error('La respuesta del LLM no tiene el formato esperado');
       }
-
-      const parsedResponse = JSON.parse(jsonMatch[0]);
+      
+      // Extract potential JSON substring (limited to reasonable size)
+      const maxJsonLength = 10000; // Reasonable limit for JSON response
+      if (jsonEndIndex - jsonStartIndex > maxJsonLength) {
+        throw new Error('La respuesta del LLM excede el tamaño máximo permitido');
+      }
+      
+      const jsonCandidate = llmText.slice(jsonStartIndex, jsonEndIndex + 1);
+      
+      let parsedResponse;
+      // Validate JSON structure before parsing
+      try {
+        parsedResponse = JSON.parse(jsonCandidate);
+      } catch (e) {
+        throw new Error('El formato de la respuesta del LLM no es JSON válido');
+      }
 
       // Validate the response structure
       if (!parsedResponse.recommendation || !['accept', 'reject'].includes(parsedResponse.recommendation)) {

@@ -13,22 +13,43 @@ export const getImageUrl = (filename: string): string => {
 };
 
 /**
- * Sanitiza una URL para asegurarse que sólo puede ser un enlace HTTP(S) o un data:image
+ * Sanitiza una URL para asegurarse que sólo puede ser un enlace HTTP(S) válido o un data:image
+ * Previene ataques XSS validando estrictamente el formato de la URL
  */
 export const sanitizeImageSrc = (src: string): string => {
   if (!src || typeof src !== 'string') return 'https://placehold.co/200';
+  
   const trimmed = src.trim();
-  // Only allow http(s) URLs or "data:image/<SAFE_FORMAT>;base64,..." for trusted FileReader images
-  const SAFE_IMAGE_FORMATS = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'];
-  if (
-    trimmed.startsWith('http://') ||
-    trimmed.startsWith('https://') ||
-    /^data:image\/(png|jpg|jpeg|gif|webp|bmp);base64,/.test(trimmed)
-  ) {
+  
+  // Validate data URLs for images (from FileReader)
+  const dataUrlRegex = /^data:image\/(png|jpg|jpeg|gif|webp|bmp);base64,[A-Za-z0-9+/=]+$/;
+  if (dataUrlRegex.test(trimmed)) {
     return trimmed;
   }
-  // Otherwise, fallback placeholder
-  return 'https://placehold.co/200';
+  
+  // Validate HTTP(S) URLs using URL constructor for strict validation
+  try {
+    const url = new URL(trimmed);
+    
+    // Only allow http and https protocols (prevents javascript:, data:, file:, etc.)
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+      console.warn('Invalid URL protocol:', url.protocol);
+      return 'https://placehold.co/200';
+    }
+    
+    // Optional: Whitelist allowed domains (uncomment if you want to restrict to specific domains)
+    // const allowedDomains = ['placehold.co', 'localhost', process.env.NEXT_PUBLIC_API_URL];
+    // if (!allowedDomains.some(domain => url.hostname.includes(domain))) {
+    //   console.warn('Domain not whitelisted:', url.hostname);
+    //   return 'https://placehold.co/200';
+    // }
+    
+    return url.toString();
+  } catch (error) {
+    // Invalid URL format
+    console.warn('Invalid URL format:', trimmed);
+    return 'https://placehold.co/200';
+  }
 };
 
 /**

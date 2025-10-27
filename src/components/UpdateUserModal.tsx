@@ -39,6 +39,14 @@ export default function UpdateUserModal({ user, onClose, onUserUpdated, authRunn
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
+    
+    // Validate that the input name is one of the expected fields
+    const allowedFields = ['name', 'email', 'password', 'admin'];
+    if (!allowedFields.includes(name)) {
+      console.warn('Attempted to set invalid field:', name);
+      return;
+    }
+    
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
@@ -48,11 +56,30 @@ export default function UpdateUserModal({ user, onClose, onUserUpdated, authRunn
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      // Validate file type
+      const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        setError('Tipo de archivo no permitido. Solo se permiten imágenes PNG, JPEG, GIF y WebP.');
+        return;
+      }
+      
+      // Validate file size (e.g., max 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        setError('El archivo es demasiado grande. Tamaño máximo: 5MB.');
+        return;
+      }
+      
       setSelectedImage(file);
+      setError(null);
+      
       // Create preview URL
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
+      };
+      reader.onerror = () => {
+        setError('Error al leer el archivo de imagen.');
       };
       reader.readAsDataURL(file);
     }

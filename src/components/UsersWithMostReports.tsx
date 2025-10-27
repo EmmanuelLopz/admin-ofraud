@@ -1,11 +1,9 @@
 "use client";
 import {useEffect, useState} from 'react';
 import { Bar } from 'react-chartjs-2';
-import { CgOptions } from 'react-icons/cg';
 
 import {
   Chart as ChartJS,
-  Title,
   BarElement,
   CategoryScale,
   LinearScale,

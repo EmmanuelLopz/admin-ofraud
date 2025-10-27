@@ -1,5 +1,3 @@
-import { getProfileImageUrl } from '@/src/utils/imageUtils';
-
 import UserAvatar from './UserAvatar';
 
 interface ViewUserProps {

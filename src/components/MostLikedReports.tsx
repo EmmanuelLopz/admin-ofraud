@@ -1,7 +1,6 @@
 "use client";
 import {useEffect, useState} from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import { CgOptions } from 'react-icons/cg';
 import { useAuth } from '@/src/context/AuthContext';
 import { AuthRunner } from '@/src/wrappers/authRunner';
 

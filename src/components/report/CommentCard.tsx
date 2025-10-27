@@ -2,7 +2,6 @@
 import clsx from 'clsx';
 import { Commenta } from '@/src/types/types';
 import Card from '../Card';
-import type { ReactNode } from 'react';
 
 type CommentCardProps = {
   comment: Commenta;

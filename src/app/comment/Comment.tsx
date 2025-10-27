@@ -1,6 +1,5 @@
 'use client';
 import MainLayout from '@/src/components/MainLayout';
-import reportes from '@/src/types/reportExamples';
 import CommentCard from '@/src/components/report/CommentCard';
 import { Commenta } from '@/src/types/types';
 import { useRouter } from 'next/navigation';

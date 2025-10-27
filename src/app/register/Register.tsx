@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { FaEnvelope, FaLock, FaUser } from 'react-icons/fa';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import {CreateUserDTO} from "../../types/CreateUserDTO";
 
 let RegisterSchema = Yup.object().shape({
   name: Yup.string()

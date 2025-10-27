@@ -2,8 +2,6 @@
 
 import React, {useState} from "react";
 import { swiftToLucideMap } from "../icons/iconsMap";
-import { Category } from "@/src/types/types";
-import exampleCategories from "@/src/types/categoryExamples";
 import { useAuth } from '@/src/context/AuthContext';
 import { AuthRunner } from '@/src/wrappers/authRunner';
 import axios from 'axios';
@@ -17,7 +15,7 @@ export default function CategoryAddModal({ onClose, setRefreshCounter }: Categor
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
     const [icon, setIcon] = useState("");
-    const { accessToken, tryRefreshToken, logout, loadingTokens } = useAuth();
+    const { accessToken, tryRefreshToken, logout} = useAuth();
 
     const authRunner = new AuthRunner(
         () => accessToken,

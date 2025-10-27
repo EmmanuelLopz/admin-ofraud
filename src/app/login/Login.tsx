@@ -2,10 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/src/context/AuthContext';
 import Image from 'next/image';
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-
-
 import { useRouter } from 'next/navigation';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
 import Link from 'next/link';

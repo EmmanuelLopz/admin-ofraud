@@ -10,7 +10,7 @@ import { Reporte } from "@/src/types/types";
 import axios from "axios";
 import UpdateReportModal from "@/src/components/UpdateReportModal";
 import Toast from "@/src/components/Toast";
-import { Edit, Sparkles } from "lucide-react";
+import {Sparkles } from "lucide-react";
 import LLMSuggestionModal from "@/src/components/LLMSuggestionModal";
 
 export default function Validation() {

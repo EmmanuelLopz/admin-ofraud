@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { X, Sparkles, Loader2, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { Reporte } from '@/src/types/types';
-import { GoogleGenAI, HarmCategory, HarmBlockThreshold } from '@google/genai';
+import { GoogleGenAI} from '@google/genai';
 
 interface LLMSuggestionModalProps {
   report: Reporte;

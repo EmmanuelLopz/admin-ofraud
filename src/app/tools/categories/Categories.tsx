@@ -5,7 +5,6 @@ import type { LucideIcon } from 'lucide-react';
 import Sidebar from "@/src/components/Sidebar";
 import React, { useState, useEffect } from 'react';
 import { swiftToLucideMap } from "../icons/iconsMap";
-import exampleCategories from "@/src/types/categoryExamples"
 import { Category } from '@/src/types/types';
 import CategoryModal from './CategoryModal';
 import CategoryAddModal from './CategoryAddModal';

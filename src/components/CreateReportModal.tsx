@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { X, Upload, FileText } from 'lucide-react';
+import { X, Upload} from 'lucide-react';
 import { AuthRunner } from '@/src/wrappers/authRunner';
 import { useFileUpload } from '@/src/hooks/useFileUpload';
-import { getProfileImageUrl } from '@/src/utils/imageUtils';
 import axios from 'axios';
 import { Category } from '@/src/types/types';
 

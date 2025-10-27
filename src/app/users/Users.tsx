@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar";
-import { Edit, Eye, Trash2, X, Plus } from "lucide-react";
+import { Edit, Eye, Trash2} from "lucide-react";
 import Modal from "../../components/ViewUserModal";
 import CreateUserModal from "../../components/CreateUserModal";
 import UpdateUserModal from "../../components/UpdateUserModal";
@@ -269,9 +269,6 @@ export default function Users() {
     setCurrentPage(newPage);
     await fetchUsers(newPage);
   };
-
-  // Helper function to get profile image with placeholder (using utility)
-  const getProfileImage = (url: string) => getProfileImageUrl(url);
 
   const filteredUsuarios = usuarios.filter(usuario =>
     searchTerm === '' ||
